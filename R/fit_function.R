@@ -2,13 +2,10 @@
 #'
 #' Function that return a trained dataset using the gradient descent.
 #' 
-#' @param x A data frame or matrix
+#' @param [formula, data, ncores, batch_size, normalize] Settings of the dataset, a data frame, the number of cores, the batch size for the mini-batch mode
 #' @author Alexandre Rives
 #' 
 #' @export
-#' 
-#' @examples 
-#' fit(y ~ ., x, ncores = 4, normalize = TRUE)
 #' 
 #' @return A trained dataset
 #' 

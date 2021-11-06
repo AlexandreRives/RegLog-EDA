@@ -12,11 +12,6 @@ f_Formula(df)
 \description{
 Function that return a 2 vectors with the x and y variables separated.
 }
-\examples{
-formula(iris)
-
-
-}
 \author{
 Deffa Ndiaye
 }

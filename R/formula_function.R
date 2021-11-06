@@ -7,10 +7,6 @@
 #' 
 #' @export
 #' 
-#' @examples 
-#' formula(iris)
-#' 
-#' 
 f_Formula <- function(df) {
   ANSWER <- readline("")
   y<-sub("\\~.*", "", ANSWER)

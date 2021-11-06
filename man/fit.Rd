@@ -7,17 +7,13 @@
 fit(formula, data, ncores, batch_size, normalize)
 }
 \arguments{
-\item{x}{A data frame or matrix}
+\item{[formula, }{data, ncores, batch_size, normalize] Settings of the dataset, a data frame, the number of cores, the batch size for the mini-batch mode}
 }
 \value{
 A trained dataset
 }
 \description{
 Function that return a trained dataset using the gradient descent.
-}
-\examples{
-fit(y ~ ., x, ncores = 4, normalize = TRUE)
-
 }
 \author{
 Alexandre Rives

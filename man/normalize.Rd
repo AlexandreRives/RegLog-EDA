@@ -15,10 +15,6 @@ A standardize data set
 \description{
 Process of putting different variables on the same scale
 }
-\examples{
-normalize(iris)
-
-}
 \author{
 Alexandre Rives
 }

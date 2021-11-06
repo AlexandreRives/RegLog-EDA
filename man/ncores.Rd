@@ -15,10 +15,6 @@ The number of cores.
 \description{
 Process of detecting the number of cores in the CPU and return it to the function.
 }
-\examples{
-ncores(8)
-
-}
 \author{
 Alexandre Rives
 }
