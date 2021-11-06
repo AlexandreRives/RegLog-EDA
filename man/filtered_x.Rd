@@ -7,7 +7,9 @@
 filtered_x(df, x)
 }
 \arguments{
-\item{[df, }{x] A data frame or matrix + feature variables}
+\item{df}{dataframe}
+
+\item{x}{feature variables}
 }
 \value{
 A data set filtered with the feature variables.

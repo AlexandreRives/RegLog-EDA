@@ -4,10 +4,10 @@
 \alias{dummies_y}
 \title{Re-coding target variable}
 \usage{
-dummies_y(df_y)
+dummies_y(y)
 }
 \arguments{
-\item{[df, }{y] A data frame or matrix + target variable}
+\item{y}{target variable}
 }
 \value{
 A re-coding quantitative data of the target variable.

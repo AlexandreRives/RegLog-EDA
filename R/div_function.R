@@ -21,7 +21,7 @@ normalize <- function(x){
 #'
 #' Process of detecting the number of cores in the CPU and return it to the function.
 #' 
-#' @param ncores A number of cores
+#' @param n_cores A number of cores
 #' @author Alexandre Rives
 #' 
 #' @import parallel
@@ -66,7 +66,8 @@ dummies <- function(x){
 #'
 #' Process of returning a data set filtered by the feature variables
 #' 
-#' @param [df, x] A data frame or matrix + feature variables
+#' @param df dataframe
+#' @param x feature variables
 #' @author Alexandre Rives
 #' 
 #' 
@@ -101,17 +102,16 @@ filtered_y <- function(df, y){
 #'
 #' Process of returning a data set with re-coding the target variable
 #' 
-#' @param [df, y] A data frame or matrix + target variable
+#' @param y target variable
 #' @author Alexandre Rives
 #' 
 #' @import tidytable
 #' 
 #' @export
 #' 
-#' 
 #' @return A re-coding quantitative data of the target variable.
 #' 
-dummies_y <- function(df_y){
-  df_y <- get_dummies.(df_y, drop_first = TRUE)
-  return(df_y)
+dummies_y <- function(y){
+  y <- get_dummies.(y, drop_first = TRUE)
+  return(y)
 }

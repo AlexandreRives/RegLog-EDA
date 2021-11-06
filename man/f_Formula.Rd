@@ -7,7 +7,7 @@
 f_Formula(df)
 }
 \arguments{
-\item{x}{A data frame or matrix}
+\item{df}{A data frame or matrix}
 }
 \description{
 Function that return a 2 vectors with the x and y variables separated.

@@ -2,7 +2,7 @@
 #'
 #' Function that return a 2 vectors with the x and y variables separated.
 #' 
-#' @param x A data frame or matrix
+#' @param df A data frame or matrix
 #' @author Deffa Ndiaye
 #' 
 #' @export
