@@ -1,8 +1,17 @@
-#############################-------FORMULA--------#############################
-
-
-
-f_Formula <- function(donnee) {
+#' Formula function
+#'
+#' Function that return a 2 vectors with the x and y variables separated.
+#' 
+#' @param x A data frame or matrix
+#' @author Deffa Ndiaye
+#' 
+#' @export
+#' 
+#' @examples 
+#' formula(iris)
+#' 
+#' 
+f_Formula <- function(df) {
   ANSWER <- readline("")
   y<-sub("\\~.*", "", ANSWER)
   x<-sub('.*~', '', ANSWER)
@@ -11,28 +20,26 @@ f_Formula <- function(donnee) {
   if(length(as.list(var_explicatives[[1]]))>1){
     
     
-    #model.frame(donnee[[y]]~ paste(donnee[[unlist(var_explicatives)]], collapse= "+"))
+    #model.frame(df[[y]]~ paste(df[[unlist(var_explicatives)]], collapse= "+"))
     
     formule <- as.formula(paste(str_c(y," ~ "), paste(unlist(var_explicatives), collapse= "+")))
-    model.frame(formule,data=donnee)
+    model.frame(formule,data=df)
     
     
   }
   else if(length(as.list(var_explicatives[[1]]))==1){
     
     
-    #model.frame(donnee[[y]]~donnee[[x]])
+    #model.frame(df[[y]]~df[[x]])
     formule <- as.formula(str_c(y," ~ ",x))
-    model.frame(formule,data=donnee)
+    model.frame(formule,data=df)
   }
   
   else if(x=="."){
     
-    formule <- as.formula(paste(str_c(y," ~ "), paste(unlist(colnames(donnee)), collapse= "+")))
-    model.frame(formule,data=donnee)
+    formule <- as.formula(paste(str_c(y," ~ "), paste(unlist(colnames(df)), collapse= "+")))
+    model.frame(formule,data=df)
     
   }
   
 }
-
-f_Formula(iris)

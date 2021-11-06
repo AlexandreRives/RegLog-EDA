@@ -16,7 +16,7 @@
 #' 
 normalize <- function(x){
   x_split <- splitmix(x)
-  x_scalebis <- apply(x_split$X.quanti, FUN=scale, MARGIN = 2)
+  x_scale <- apply(x_split$X.quanti, FUN=scale, MARGIN = 2)
   return(x_scale)
 }
 
@@ -32,7 +32,9 @@ normalize <- function(x){
 #' @export
 #' 
 #' @examples
-#' ncores(n_cores)
+#' ncores(8)
+#' 
+#' @return The number of cores.
 #' 
 ncores <- function(n_cores){
   cores = parallel::detectCores()
@@ -58,7 +60,9 @@ ncores <- function(n_cores){
 #' @export
 #' 
 #' @examples
-#' dummies(heart)
+#' dummies(iris)
+#' 
+#' @return recording quantitative data of the dataset.
 #' 
 dummies <- function(x){
   x_split <- splitmix(x)
