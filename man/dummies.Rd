@@ -10,10 +10,10 @@ dummies(x)
 \item{x}{A data frame or matrix}
 }
 \value{
-A re-coding quantitative data of the dataset.
+A encoding quantitative data of the dataset.
 }
 \description{
-Process of returning a data set with re-coding feature variables
+Process of returning a data set with re-coding features
 }
 \author{
 Alexandre Rives

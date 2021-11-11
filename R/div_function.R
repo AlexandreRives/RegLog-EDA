@@ -1,6 +1,6 @@
 #' Normalize
 #'
-#' Process of putting different variables on the same scale
+#' Process of putting different features on the same scale
 #' 
 #' @param x A data frame or matrix
 #' @author Alexandre Rives
@@ -43,7 +43,7 @@ ncores <- function(n_cores){
 
 #' Re-coding variables
 #'
-#' Process of returning a data set with re-coding feature variables
+#' Process of returning a data set with re-coding features
 #' 
 #' @param x A data frame or matrix
 #' @author Alexandre Rives
@@ -53,7 +53,7 @@ ncores <- function(n_cores){
 #' 
 #' @export
 #' 
-#' @return A re-coding quantitative data of the dataset.
+#' @return A encoding quantitative data of the dataset.
 #' 
 dummies <- function(x){
   x_split <- splitmix(x)
@@ -64,16 +64,16 @@ dummies <- function(x){
 
 #' Filter feature variables
 #'
-#' Process of returning a data set filtered by the feature variables
+#' Process of returning a data set filtered by the features
 #' 
 #' @param df dataframe
-#' @param x feature variables
+#' @param x features
 #' @author Alexandre Rives
 #' 
 #' 
 #' @export
 #' 
-#' @return A data set filtered with the feature variables.
+#' @return A data set filtered with the features.
 #' 
 filtered_x <- function(df, x){
   df_x <- df[x]
@@ -84,14 +84,15 @@ filtered_x <- function(df, x){
 #'
 #' Process of returning a data set filtered by the target variable
 #' 
-#' @param [df, y] A data frame or matrix + target variable
+#' @param df A data frame or matrix
+#' @param y data of the target variable
 #' @author Alexandre Rives
 #' 
 #' 
 #' @export
 #' 
 #' 
-#' @return A data set filtered with the target variables.
+#' @return A data set filtered by the target variable.
 #' 
 filtered_y <- function(df, y){
   df_y <- df[y]
@@ -102,7 +103,7 @@ filtered_y <- function(df, y){
 #'
 #' Process of returning a data set with re-coding the target variable
 #' 
-#' @param y target variable
+#' @param y data of the target variable
 #' @author Alexandre Rives
 #' 
 #' @import tidytable
@@ -115,3 +116,23 @@ dummies_y <- function(y){
   y <- get_dummies.(y, drop_first = TRUE)
   return(y)
 }
+
+#' Sample a dataset
+#'
+#' Process of returning a sampled dataset
+#' 
+#' @param df dataset
+#' @author Alexandre Rives
+#' 
+#' @import tidytable
+#' 
+#' @export
+#' 
+#' @return A sampled dataset.
+#' 
+sampled_df <- function(df){
+  rows <- sample(nrow(df))
+  sampled_df <- df[rows,]
+  return(df_sampled)
+}
+

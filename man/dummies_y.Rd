@@ -7,7 +7,7 @@
 dummies_y(y)
 }
 \arguments{
-\item{y}{target variable}
+\item{y}{data of the target variable}
 }
 \value{
 A re-coding quantitative data of the target variable.

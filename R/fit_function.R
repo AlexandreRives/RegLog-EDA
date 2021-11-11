@@ -5,8 +5,8 @@
 #' @param formula the data frame
 #' @param data the data frame
 #' @param ncores the number of cores to run the fit function faster. It's better to use it with more than 10 000 data.
-#' @param batch_size the number of batch for the mini batch mode.
-#' @param normalize TRUE if you want to scale your feature variables. It doesn't take the qualitative data.
+#' @param batch_size the number of observations for the mini batch mode.
+#' @param normalize TRUE if you want to scale your features. It doesn't take the qualitative data.
 #' 
 #' @author Alexandre Rives
 #' 
@@ -14,12 +14,6 @@
 #' 
 #' @return A fitted dataset
 #' 
-norm = FALSE
-ncores = NULL
-data = NULL
-formula = ""
-batch_size = NULL
-
 fit <- function(formula, data, ncores, batch_size, norm){
   if(data == NULL){
     print("You should enter a data set.")

@@ -9,13 +9,13 @@ filtered_x(df, x)
 \arguments{
 \item{df}{dataframe}
 
-\item{x}{feature variables}
+\item{x}{features}
 }
 \value{
-A data set filtered with the feature variables.
+A data set filtered with the features.
 }
 \description{
-Process of returning a data set filtered by the feature variables
+Process of returning a data set filtered by the features
 }
 \author{
 Alexandre Rives

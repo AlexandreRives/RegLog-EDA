@@ -7,10 +7,12 @@
 filtered_y(df, y)
 }
 \arguments{
-\item{[df, }{y] A data frame or matrix + target variable}
+\item{df}{A data frame or matrix}
+
+\item{y}{data of the target variable}
 }
 \value{
-A data set filtered with the target variables.
+A data set filtered by the target variable.
 }
 \description{
 Process of returning a data set filtered by the target variable
