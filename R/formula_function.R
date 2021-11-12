@@ -1,8 +1,9 @@
 #' Formula function
 #'
-#' Function that return a 2 vectors with the x and y variables separated.
+#' Function that return a filtered dataframe according to the equation given by the user.
 #' 
-#' @param df A data frame or matrix
+#' @param formula the logistic regression equation
+#' @param donnee A data frame or matrix
 #' @author Deffa Ndiaye
 #' 
 #' @export
