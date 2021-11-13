@@ -184,5 +184,32 @@ gradient_online_nbIt_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentis
 gradient_mini_batch_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 8, Taux_apprentissage = 0.1, nb_iteration = 10)
 
 ############################################################################################################################################
+#install.packages("parallel")
+library(tictoc)
+library(parallel)
 
+matprod_par <- function(cl, matA, matB){
+  if(ncol(matA) != nrow(matB)) stop("Matrices do not conform")
+  idx <- splitIndices(nrow(matA), length(cl))
+  Alist <- lapply(idx, function(ii) matA[ii,,drop=FALSE])
+  ans <- clusterApply(cl, Alist, get("%%"), matB)
+  #ans <- clusterApply(cl, Alist, function(aa, BB) aa %% BB, matB)
+  do.call(rbind, ans)
+}
 
+matA <- matrix(1:500,100, 1000,TRUE)
+matB <- matrix(1:500,1000, 100,TRUE)
+
+detectCores()
+cl <- makeCluster(5)
+clusterExport(cl, c("matA", "matB","matprod_par"))
+tic()
+matprod_par(cl, matA, matB)
+toc()
+stopCluster(cl)
+
+tic()
+matA %*% matB
+toc()
+
+sessionInfo()
