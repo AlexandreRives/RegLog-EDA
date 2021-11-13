@@ -188,28 +188,42 @@ gradient_mini_batch_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 8, T
 library(tictoc)
 library(parallel)
 
-matprod_par <- function(cl, matA, matB){
+matprod_par <- function(nb_clust, matA, matB){
   if(ncol(matA) != nrow(matB)) stop("Matrices do not conform")
-  idx <- splitIndices(nrow(matA), length(cl))
-  Alist <- lapply(idx, function(ii) matA[ii,,drop=FALSE])
-  ans <- clusterApply(cl, Alist, get("%%"), matB)
-  #ans <- clusterApply(cl, Alist, function(aa, BB) aa %% BB, matB)
-  do.call(rbind, ans)
+  if (nrow(matA)*ncol(matB) < 1000000){
+    return(matA %*% matB)
+  } else {
+    cl <- makeCluster(nb_clust)
+    idx <- splitIndices(nrow(matA), length(cl))
+    Alist <- lapply(idx, function(ii) matA[ii,,drop=FALSE])
+    ans <- clusterApply(cl, Alist, get("%*%"), matB)
+    stopCluster(cl)
+    return(do.call(rbind, ans))
+  }
 }
 
-matA <- matrix(1:500,100, 1000,TRUE)
-matB <- matrix(1:500,1000, 100,TRUE)
+# ?matrix
+A <- matrix(data = 1:500, nrow = 1000, ncol = 50000, byrow = TRUE)
+B <- matrix(data = 1:500, nrow = 50000, ncol = 1000, byrow = TRUE)
 
-detectCores()
-cl <- makeCluster(5)
-clusterExport(cl, c("matA", "matB","matprod_par"))
+A <- matrix(data = 1:50, nrow = 100, ncol = 150, byrow = TRUE)
+B <- matrix(data = 1:50, nrow = 150, ncol = 100, byrow = TRUE)
+
+# Seuil à 1 000 000 de données 
+#detectCores()
+
 tic()
-matprod_par(cl, matA, matB)
+C = matprod_par(nb_clust = 7, matA = A, matB = B)
 toc()
-stopCluster(cl)
 
 tic()
-matA %*% matB
+D = A %*% B
 toc()
 
+dim(C)
 sessionInfo()
+
+nrow(A)
+ncol(B)
+
+?matrix
