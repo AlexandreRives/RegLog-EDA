@@ -133,6 +133,6 @@ dummies_y <- function(y){
 sampled_df <- function(df){
   rows <- sample(nrow(df))
   sampled_df <- df[rows,]
-  return(df_sampled)
+  return(sampled_df)
 }
 

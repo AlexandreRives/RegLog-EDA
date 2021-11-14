@@ -4,13 +4,15 @@
 \alias{f_Formula}
 \title{Formula function}
 \usage{
-f_Formula(df)
+f_Formula(formula, donnee)
 }
 \arguments{
-\item{df}{A data frame or matrix}
+\item{formula}{the logistic regression equation}
+
+\item{donnee}{A data frame or matrix}
 }
 \description{
-Function that return a 2 vectors with the x and y variables separated.
+Function that return a filtered dataframe according to the equation given by the user.
 }
 \author{
 Deffa Ndiaye
