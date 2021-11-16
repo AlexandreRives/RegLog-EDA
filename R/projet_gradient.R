@@ -6,25 +6,20 @@
 rm(list = ls(all = TRUE))
 
 library(dplyr)
+library(PCAmixdata)
+library(tidytable)
 
 setwd("~/Documents/M2_SISE/Prog_R/Projet_R")
 
 # Fichier test iris (avec variable )
 df <- read.table("iris_data.csv", header = TRUE, sep = ",")
-
+# 
 df1 = df %>% filter(species == "setosa" | species == "versicolor")
 df1$species = ifelse(df1$species == "setosa", 1, 0)
 head(df1)
 
 Var_X1 = c("sepal_length", "sepal_width", "petal_length", "petal_width")
 Var_y1 = c("species")
-
-#X_df1 = df1 %>% select("sepal_length", "sepal_width", "petal_length", "petal_width")
-#y_df1 = df1$species
-# 
-# test = c("sepal_length", "sepal_width", "petal_length", "petal_width")
-# df_test = df1 %>% select(test)
-# head(df_test)
 
 
 #-----------------------------------------------------# 
@@ -51,137 +46,200 @@ sampled_df <- function(df){
   return(df_sampled)
 }
 
-Creer_groupes_mini_batch <- function(df, nb_batch){
-  # On melange
-  df = sampled_df(df)
-  nb_group = nrow(df) %/% nb_batch
-  ls = list()
-  for (i in 1:nb_group){
-    df_mini = df[1:nb_batch,] # On prends les nb_batch premiers
-    ls[[i]] = df_mini         # On ajoute le dataframe à la liste
-    df = df[-c(1:nb_batch),]  # On supprime ce qu'on a prit du dataset df
+df_mini_batch <- function(df, df_initial, nb_batch){
+  if (nrow(df) < nb_batch){
+    return(rbind(df, sampled_df(df_initial)))
+  } else {
+    return(df)
   }
-  return(ls)
 }
-Creer_groupes_mini_batch(df = df1, nb_batch = 8)
+
+
+fct_cout <- function(y_pred, y_reel){
+  cost = mean(-y_reel * log(y_pred) - (1-y_reel) * log(1-y_pred))
+  return(cost)
+}
+
+
+# #-----------------------------------------------------# 
+# # Traitement du dataset pour les tests                #
+# #-----------------------------------------------------# 
+# 
+# get_dummies_df <- function(X){
+#   x_split <- splitmix(X)
+#   if (length(x_split$X.quali) != 0){
+#     quali_dummies = X %>% get_dummies.(drop_first = TRUE) %>% select(!colnames(X))
+#     x_split <- splitmix(X)
+#     df_dummies_ok = cbind(x_split$X.quanti, quali_dummies)
+#     return(df_dummies_ok)
+#   } else {return(X)}
+# }
+# 
+# # Fichier test heart
+# df_heart = read.table("heart_train_test.csv", header = TRUE, sep = ",")
+# str(df_heart)
+# X_df_heart = df_heart[,c("age","sexe","pression","cholester","sucre","electro","taux_max","angine","depression","pic","vaisseau")]
+# y_df_heart = df_heart[,"coeur"]
+# 
+# # Transformation de X_df_heart en X_df_heart_ok
+# X_df_heart_ok = get_normalize_df(X_df_heart)
+# X_df_heart_ok = get_dummies_df(X_df_heart_ok)
+# head(X_df_heart_ok)
+# 
+# # Transformation de y_df_heart en y_df_heart_ok
+# y_df_heart_ok = get_dummies_y(y_df_heart)
+# head(y_df_heart_ok)
+# 
+# df_heart_ok = cbind(X_df_heart_ok, y_df_heart_ok)
+# # Pour les tests :
+# df1 = df_heart_ok
+# Var_X1 = colnames(X_df_heart_ok)
+# Var_y1 = colnames(y_df_heart_ok)
 
 #-----------------------------------------------------# 
 # Descente de gradient classique - Batch              #
 #-----------------------------------------------------# 
 
-# Batch + nb_iteration 
-
 descente_de_gradient_ok <- function(df, Var_X, Var_y, Taux_apprentissage, nb_iteration){
-
-  # Initialiser theta
-  theta = rep(0, times = length(Var_X)+1) ; theta
+  # Initialize theta
+  theta = rep(1, times = length(Var_X) + 1) 
+  
+  # Creation of an empty list
+  cost_list = c()
   
   for (i in 1:nb_iteration){
-    # On melange et on differencie X et y
+    # We mix and we differentiate X and y
     df = sampled_df(df)
     X_df = df[, Var_X]
     y_df = df[, Var_y]
     
-    X = ajout_constante(X_df) ; X
-    Z = X %*% theta ; Z
-    h = sigmoid(Z) ; h
-    gradient = t(X) %*% (y_df - h) / length(y_df) ; gradient
-    theta = Taux_apprentissage * gradient ; theta
-    #print(theta)
+    X = ajout_constante(X_df) 
+    Z = X %*% theta 
+    h = sigmoid(Z) 
+    gradient = t(X) %*% (y_df - h) / length(y_df) 
+    
+    # Calculation of cost and add to the list
+    cost = fct_cout(y_pred = h, y_reel = y_df)
+    cost_list = c(cost_list, cost)
+    
+    # Update theta
+    theta = Taux_apprentissage * gradient 
   }
-  theta_final = theta
-  return(theta_final)
+  
+  best_theta  = theta
+  return(list(best_theta  = best_theta, cost_list = cost_list))
 }
 
-descente_de_gradient_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 10)
-
+A = descente_de_gradient_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 100) ; A
+plot(A$cost_list, type = "l")
 
 #-----------------------------------------------------# 
 # Descente de gradient stochastique - Online          #
 #-----------------------------------------------------# 
 
-# Online + nb_iteration + Melange dataset 
-
-gradient_online_nbIt_ok <- function(df, Var_X, Var_y, Taux_apprentissage, nb_iteration){
-  # Initialiser theta (1ere ligne du tableau)
+gradient_online_nbIt_ok_ok <- function(df, Var_X, Var_y, Taux_apprentissage, nb_iteration){
+  # Initialize theta 
   num_ligne = sample(x = 1:nrow(df), size = 1)
   theta = ajout_constante(df[num_ligne, Var_X])
-  #theta = rep(0, times = length(Var_X)+1) ; theta
+  
+  # Creation of an empty list
+  cost_list = c()
   
   for (it in 1:nb_iteration){
-    # On melange et on differencie X et y
+    # We mix and we differentiate X and y
     df = sampled_df(df)
     X_df = df[, Var_X]
     y_df = df[, Var_y]
     
-    for (i in 1:(nrow(X_df)-2)){
+    
+    for (i in 1:(nrow(X_df)-1)){
       X_suivant = ajout_constante(X_df[i+1,])
       Z = X_suivant * theta 
       h = sigmoid(Z) 
       gradient = X_suivant * (y_df[i] - h) 
+      
+      if (i == (nrow(X_df)-1)){
+        # Calculation of cost and add to the list
+        cost = fct_cout(y_pred = h, y_reel = y_df[i])
+        cost_list = c(cost_list, cost)
+      }
+      
+      # Update theta
       theta = Taux_apprentissage * gradient 
-      #print(theta)
     }
-    #it = it + 1
   }
-  theta_final = theta
-  return(theta_final)
+  best_theta  = theta
+  return(list(best_theta  = best_theta, cost_list = cost_list))
 }
 
-gradient_online_nbIt_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 10)
-
+B = gradient_online_nbIt_ok_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 100)
+plot(B$cost_list, type = "l", main = "Online")
 
 #-----------------------------------------------------# 
 # Descente de gradient stochastique - Mini-batch      #
 #-----------------------------------------------------# 
 
-gradient_mini_batch_ok <- function(df, Var_X, Var_y, nb_batch, Taux_apprentissage, nb_iteration){
+gradient_mini_batch_ok_ok <- function(df, Var_X, Var_y, nb_batch, Taux_apprentissage, nb_iteration){
+  # Initialize theta
+  theta = rep(1, times = length(Var_X) + 1) 
   
-  # Initialiser theta à 0
-  theta = rep(0, times = length(Var_X)+1) ; theta
-  
-  # On stocke le dataset initial
+  # Save initial dataset
   df_init = df
   
-  # Calcul du nombre de tour possible en parcourant une fois le dataset 
-  nb_tour = nrow(df_init) %/% nb_batch
+  # Creation of an empty list
+  cost_list = c()
   
-  # On crée les groupes mini batch une première fois 
-  #liste_mini_batch = Creer_groupes_mini_batch(df = df_init, nb_batch = nb_batch)
-  
-  for (it in 1:nb_iteration){
-    # On crée les groupes mini batch 
-    liste_mini_batch = Creer_groupes_mini_batch(df = df_init, nb_batch = nb_batch)
+  for (i in 1:nb_iteration){
+    df = df_mini_batch(df = df, df_initial = df_init, nb_batch = nb_batch)
+    # We collect data 
+    df_mini = df[1:nb_batch,]
+    # We drop this data in df
+    df = df[-c(1:nb_batch),]
     
-    for (i in 1:nb_tour){
-      # On melange et on differencie X et y
-      df = liste_mini_batch[[i]]
-      X_df = df[, Var_X]
-      y_df = df[, Var_y]
-      
-      X = ajout_constante(X_df) ; X
-      Z = X %*% theta ; Z
-      h = sigmoid(Z) ; h
-      gradient = t(X) %*% (y_df - h) / length(y_df) ; gradient
-      theta = Taux_apprentissage * gradient ; theta
-      #print(theta)
-    }
+    # We differentiate X and y
+    X_df = df_mini[, Var_X]
+    y_df = df_mini[, Var_y]
+    
+    X = ajout_constante(X_df) 
+    Z = X %*% theta 
+    h = sigmoid(Z) 
+    gradient = t(X) %*% (y_df - h) / length(y_df)
+    
+    # Calculation of cost and add to the list
+    cost = fct_cout(y_pred = h, y_reel = y_df)
+    cost_list = c(cost_list, cost)
+    
+    # Update theta
+    theta = Taux_apprentissage * gradient 
   }
-  theta_final = theta
-  return(theta_final)
+  best_theta  = theta
+  return(list(best_theta  = best_theta, cost_list = cost_list))
+  
 }
 
-gradient_mini_batch_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 8, Taux_apprentissage = 0.1, nb_iteration = 10)
+C = gradient_mini_batch_ok_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 70, Taux_apprentissage = 0.1, nb_iteration = 100) ; C
+plot(C$cost_list, type = "l")
 
 #######################################################################################
 ## Comparaison fianle
 #######################################################################################
 
-descente_de_gradient_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 10)
+A = descente_de_gradient_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 100) ; A
+plot(A$cost_list, type = "l", main = "Batch")
 
-gradient_online_nbIt_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 10)
+B = gradient_online_nbIt_ok_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.1, nb_iteration = 100)
+plot(B$cost_list, type = "l", main = "Online")
 
-gradient_mini_batch_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 8, Taux_apprentissage = 0.1, nb_iteration = 10)
+C = gradient_mini_batch_ok_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, nb_batch = 70, Taux_apprentissage = 0.1, nb_iteration = 100) ; C
+plot(C$cost_list, type = "l", main = "Mini-Batch")
+
+#######################################################################################
+# Comparaison avec la regression logistique de glm
+myreg = glm(species ~ sepal_length+sepal_width+petal_length+petal_width ,data = df1)
+print(myreg)
+summary(myreg)
+
+
 
 ############################################################################################################################################
 #install.packages("parallel")
@@ -189,10 +247,10 @@ library(tictoc)
 library(parallel)
 
 matprod_par <- function(nb_clust, matA, matB){
-  if(ncol(matA) != nrow(matB)) stop("Matrices do not conform")
-  if (nrow(matA)*ncol(matB) < 1000000){
+  if(ncol(matA) != nrow(matB)) stop("Matrices do not conform.")
+  if (nrow(matA)*ncol(matB) < 700000){
     return(matA %*% matB)
-  } else {
+  } else { 
     cl <- makeCluster(nb_clust)
     idx <- splitIndices(nrow(matA), length(cl))
     Alist <- lapply(idx, function(ii) matA[ii,,drop=FALSE])
@@ -203,13 +261,13 @@ matprod_par <- function(nb_clust, matA, matB){
 }
 
 # ?matrix
-A <- matrix(data = 1:500, nrow = 1000, ncol = 50000, byrow = TRUE)
-B <- matrix(data = 1:500, nrow = 50000, ncol = 1000, byrow = TRUE)
+A <- matrix(data = 1:500, nrow = 1000, ncol = 600, byrow = TRUE)
+B <- matrix(data = 1:500, nrow = 600, ncol = 1000, byrow = TRUE)
 
-A <- matrix(data = 1:50, nrow = 100, ncol = 150, byrow = TRUE)
-B <- matrix(data = 1:50, nrow = 150, ncol = 100, byrow = TRUE)
+A <- matrix(data = 1:500, nrow = 1000, ncol = 700, byrow = TRUE)
+B <- matrix(data = 1:500, nrow = 700, ncol = 1000, byrow = TRUE)
 
-# Seuil à 1 000 000 de données 
+# Seuil à 700 000 de données 
 #detectCores()
 
 tic()
@@ -220,10 +278,8 @@ tic()
 D = A %*% B
 toc()
 
-dim(C)
-sessionInfo()
+###########################################################################################"
 
-nrow(A)
-ncol(B)
 
-?matrix
+
+
