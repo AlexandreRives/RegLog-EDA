@@ -16,5 +16,5 @@ A standardize data set
 Process of putting different features on the same scale
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

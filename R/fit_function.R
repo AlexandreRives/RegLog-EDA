@@ -8,7 +8,7 @@
 #' @param batch_size the number of observations for the mini batch mode.
 #' @param normalize TRUE if you want to scale your features. It doesn't take the qualitative data.
 #' 
-#' @author Alexandre Rives
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @export
 #' 
@@ -38,38 +38,7 @@ fit <- function(formula, data, ncores, batch_size, norm){
 }
 
 
-# En fait on ne prend en entre que des variables quanti donc pas besoin de tout refaire dans le fit (vu que ca sera fait en amont)
-fit_reg_log <- function(formula, data, mode, batch_size, ncores, normalize = FALSE, autres param. éventuels){
-  if (data == NULL) {print("You should enter a data set.")}
-  
-  # # Etape 1 : Récuperer les valeurs de formula
-  # var_x = fct_formula(formula)$x
-  # var_y = fct_formula(formula)$y
-  # 
-  # # Etape 2 : Filter le dataframe
-  # df_x = filter_df(data, var_x)
-  # df_y = filter_df(data, var_y)
-  
-  # Etape 3 : Si normalize = TRUE, on normalise les données sinon rien 
-  if (normalize == TRUE) {df_x = get_normalize_df(df_x)}
-  
-  # Etape 4 : Descente du gradient en fonction du mode
-  if (mode == "batch"){
-    coefs = descente_de_gradient_batch(.............)
-  } else if (mode == "online"){
-    coefs = descente_de_gradient_online(.............)
-  } else if (mode == "mini_batch"){
-    coefs = descente_de_gradient_mini_batch(.............)
-  }
-  
-  # Etape 5 : Sortir toutes les metriques neccessaires 
-  
-  
-  # Etape finale : Création de l'objet fit_reg_log de TYPE S3 dont les méthodes génériques "print" et "summary" au moins sont surchargées
-  
-  
-  return(obj_fit_reg_log) # Retourner un objet de type S3
-}
+
 
 
 

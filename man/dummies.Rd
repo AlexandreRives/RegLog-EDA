@@ -16,5 +16,5 @@ A encoding quantitative data of the dataset.
 Process of returning a data set with re-coding features
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

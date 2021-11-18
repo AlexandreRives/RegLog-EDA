@@ -18,5 +18,5 @@ A data set filtered with the features.
 Process of returning a data set filtered by the features
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

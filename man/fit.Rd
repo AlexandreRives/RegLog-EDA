@@ -24,5 +24,5 @@ A fitted dataset
 Function that return a trained dataset using the gradient descent.
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

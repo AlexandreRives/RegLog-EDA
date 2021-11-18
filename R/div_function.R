@@ -1,3 +1,19 @@
+#' Formula function
+#'
+#' Function that return a filtered dataframe according to the equation given by the user.
+#' 
+#' @param formula the logistic regression equation
+#' @param data A data frame or matrix
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @return a filtered dataframe
+#' 
+f_Formula <- function(formula,data) {
+  df<- model.frame(formula,data=data)
+  return(df)
+}
+
+
 #' Normalize
 #'
 #' Process of putting different features on the same scale
@@ -25,8 +41,6 @@ normalize <- function(x){
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @import parallel
-#' 
-#' @export
 #' 
 #' @return The number of cores.
 #' 
@@ -70,7 +84,6 @@ dummies <- function(x){
 #' @param x features
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
-#' 
 #' @export
 #' 
 #' @return A data set filtered with the features.
@@ -88,6 +101,7 @@ filtered_x <- function(df, x){
 #' @param y data of the target variable
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
+#' @export
 #' 
 #' @return A data set filtered by the target variable.
 #' 
@@ -120,8 +134,6 @@ dummies_y <- function(y){
 #' 
 #' @param df dataset
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#' 
-#' @export
 #' 
 #' @return A sampled dataset.
 #' 
