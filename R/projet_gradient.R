@@ -1,129 +1,44 @@
-###################################################################################
-##                            Prog R - Projet - M2 SISE                          ##
-###################################################################################
+#' Batch gradient descent
+#'
+#' Batch gradient descent computes the gradient using the whole dataset
+#' 
+#' @param df
+#' @param var_X
+#' @param var_y
+#' @param learning_rate
+#' @param max_iter
+#' 
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @import PCAmixdata
+#' 
+#' @export
+#' 
+#' @return A standardize data set
+#' 
+batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
 
-rm(list = ls(all = TRUE))
-
-library(dplyr)
-library(PCAmixdata)
-library(tidytable)
-
-setwd("~/Documents/M2_SISE/Prog_R/Projet_R")
-
-# Fichier test -> iris_data.csv
-df <- read.table("iris_data.csv", header = TRUE, sep = ",")
-# 
-df1 = df %>% filter(species == "setosa" | species == "versicolor")
-df1$species = ifelse(df1$species == "setosa", 1, 0)
-head(df1)
-
-Var_X1 = c("sepal_length", "sepal_width", "petal_length", "petal_width")
-Var_y1 = c("species")
-
-
-# Fichier test -> visaPremierR.csv
-df <- read.csv("visaPremierR.csv", header = TRUE)
-str(df)
-
-df1 = df[,2:ncol(df)]
-colnames(df1)
-
-Var_X1 = c("age","anciente","nbopguic","moycred3","aveparmo","endette","engagemt","engagemc","engagemm","nbcptvue","moysold3",
-           "moycredi","agemvt","nbop","mtfactur","engageml","nbvie","mtvie","nbeparmo","mteparmo","nbeparlo","mteparlo","nblivret",
-           "mtlivret","nbeparlt","mteparlt","nbpaiecb","nbcb","nbcbptar","avtscpte","aveparfi","nbjdebit","ptvente_2","ptvente_3","ptvente_4",
-           "ptvente_5","ptvente_6","ptvente_7","sitfamil_Fcel","sitfamil_Fdiv","sitfamil_Fmar","sitfamil_Fsep","sitfamil_Fuli","sitfamil_Fveu","csp_Part","csp_Pcad","csp_Pemp")
-Var_y1 = c("cartevpr")
-
-# Fichier test -> heart_train_test.csv
-df <- read.csv("heart_train_test.csv", header = TRUE)
-str(df)
-coeur = ifelse(df$coeur == "presence",1,0)
-df_temp = as.data.frame(apply(df[,c("age","pression","cholester","taux_max","pic")], 2, scale))
-
-df1 = cbind(df_temp, coeur)
-head(df1)
-
-Var_X1 = c("age","pression","cholester","taux_max","pic")
-Var_y1 = c("coeur")
-
-
-
-#-----------------------------------------------------# 
-# Fonctions annexes                                   #
-#-----------------------------------------------------# 
-
-sigmoid <- function(x){
-  res = 1 / (1 + exp(x))
-  return(res)
-}
-sigmoid(0)
-
-
-ajout_constante <- function(X){
-  X = as.matrix(X)
-  X_bis = cbind(1,X)
-  return(X_bis)
-}
-
-
-sampled_df <- function(df){
-  rows <- sample(nrow(df))
-  df_sampled <- df[rows,]
-  return(df_sampled)
-}
-
-df_mini_batch <- function(df, df_initial, nb_batch){
-  if (nrow(df) < nb_batch){
-    return(rbind(df, sampled_df(df_initial)))
-  } else {
-    return(df)
-  }
-}
-
-
-fct_cout <- function(y_pred, y_reel){
-  cost = mean((-y_reel * log(y_pred)) - ((1-y_reel) * log(1-y_pred)))
-  return(cost)
-}
-
-
-
-#-----------------------------------------------------# 
-# Descente de gradient classique - Batch              #
-#-----------------------------------------------------# 
-
-descente_de_gradient_ok <- function(df, Var_X, Var_y, Taux_apprentissage, nb_iteration){
-  # Initialize theta
-  theta = rep(1, times = length(Var_X) + 1)
+  theta = rep(1, times = length(var_X) + 1)
   
-  # Creation of an empty list
   cost_list = c()
   
-  # We differentiate X and y
-  X_df = df[, Var_X]
-  y_df = df[, Var_y]
+  X_df = df[, var_X]
+  y_df = df[, var_y]
   
-  for (i in 1:nb_iteration){
+  for (i in 1:max_iter){
     
-    X = ajout_constante(X_df)
+    X = add_constant(X_df)
     Z = X %*% theta
     h = sigmoid(Z)
     gradient = (t(X) %*% (y_df - h)) / length(y_df)
-
-    # Calculation of cost and add to the list
-    cost = fct_cout(y_pred = h, y_reel = y_df)
+    cost = log_loss_function(y_pred = h, y_reel = y_df)
     cost_list = c(cost_list, cost)
-    
-    # Update theta
-    theta = theta - (Taux_apprentissage * gradient)
+    theta = theta - (learning_rate * gradient)
   }
   
   best_theta  = theta
   return(list(best_theta  = best_theta, cost_list = cost_list))
 }
-
-A = descente_de_gradient_ok(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.01, nb_iteration = 1000) ; A
-plot(A$cost_list, type = "l")
 
 #-----------------------------------------------------# 
 # Descente de gradient stochastique - Online          #
