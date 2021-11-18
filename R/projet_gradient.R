@@ -2,7 +2,6 @@
 ##                            Prog R - Projet - M2 SISE                          ##
 ###################################################################################
 
-
 rm(list = ls(all = TRUE))
 
 library(dplyr)
@@ -105,10 +104,10 @@ descente_de_gradient_ok <- function(df, Var_X, Var_y, Taux_apprentissage, nb_ite
   y_df = df[, Var_y]
   
   for (i in 1:nb_iteration){
-
-    X = ajout_constante(X_df) 
-    Z = X %*% theta 
-    h = sigmoid(Z) 
+    
+    X = ajout_constante(X_df)
+    Z = X %*% theta
+    h = sigmoid(Z)
     gradient = (t(X) %*% (y_df - h)) / length(y_df)
 
     # Calculation of cost and add to the list
@@ -273,6 +272,47 @@ toc()
 
 ###########################################################################################"
 
+library(doParallel)
+library(parallel)
 
+?clusterExport
+descente_de_gradient_ok_for_each <- function(df, Var_X, Var_y, Taux_apprentissage, nb_iteration){
+  cl = makeCluster(5)
+  registerDoParallel(cl)
+  clusterExport(cl=cl, c("df", "ajout_constante", "sigmoid", "fct_cout"))
+  
+  # Initialize theta
+  theta = rep(1, times = length(Var_X) + 1)
+  
+  # Creation of an empty list
+  cost_list = c()
+  
+  # We differentiate X and y
+  X_df = df[, Var_X]
+  y_df = df[, Var_y]
+  
+  foreach(i = 1:nb_iteration, .combine = "c") %do% {
+    
+    X = ajout_constante(X_df)
+    Z = X %*% theta
+    h = sigmoid(Z)
+    gradient = (t(X) %*% (y_df - h)) / length(y_df)
+    
+    # Calculation of cost and add to the list
+    cost = fct_cout(y_pred = h, y_reel = y_df)
+    cost_list = c(cost_list, cost)
+    
+    # Update theta
+    theta = theta - (Taux_apprentissage * gradient)
+  }
+  
+  best_theta  = theta
+  stopCluster(cl)
+  stopImplicitCluster()
+  return(list(best_theta  = best_theta, cost_list = cost_list))
+}
+
+A = descente_de_gradient_ok_for_each(df = df1, Var_X = Var_X1, Var_y = Var_y1, Taux_apprentissage = 0.01, nb_iteration = 1000) ; A
+plot(A$cost_list, type = "l")
 
 
