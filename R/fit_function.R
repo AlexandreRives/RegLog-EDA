@@ -82,21 +82,15 @@ print.reg_log <- function(object){
 
  }
 
+
 #summary
 
 
 obj<-fit_reg_log(coeur~.,data=heart,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
 
 
+
 print(obj)
-# Etape 5 : Sortir toutes les metriques neccessaires
-heart <- read.table("C:/Users/dia/Downloads/heart_propre.csv",header=T)
-
-# Etape finale : Création de l'objet fit_reg_log de TYPE S3 dont les méthodes génériques "print" et "summary" au moins sont surchargées
-
-
-#return(obj_fit_reg_log) # Retourner un objet de type S3 }
-
 
 
 
