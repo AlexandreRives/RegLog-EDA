@@ -16,5 +16,5 @@ A sampled dataset.
 Process of returning a sampled dataset
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

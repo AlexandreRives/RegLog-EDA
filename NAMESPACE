@@ -2,13 +2,10 @@
 
 export(dummies)
 export(dummies_y)
-export(f_Formula)
 export(filtered_x)
 export(filtered_y)
 export(fit)
-export(ncores)
 export(normalize)
-export(sampled_df)
 import(PCAmixdata)
 import(parallel)
 import(tidytable)

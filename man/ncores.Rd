@@ -16,5 +16,5 @@ The number of cores.
 Process of detecting the number of cores in the CPU and return it to the function.
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

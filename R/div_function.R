@@ -1,9 +1,25 @@
+#' Formula function
+#'
+#' Function that return a filtered dataframe according to the equation given by the user.
+#' 
+#' @param formula the logistic regression equation
+#' @param data A data frame or matrix
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @return a filtered dataframe
+#' 
+f_Formula <- function(formula,data) {
+  df<- model.frame(formula,data=data)
+  return(df)
+}
+
+
 #' Normalize
 #'
 #' Process of putting different features on the same scale
 #' 
 #' @param x A data frame or matrix
-#' @author Alexandre Rives
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @import PCAmixdata
 #' 
@@ -22,11 +38,9 @@ normalize <- function(x){
 #' Process of detecting the number of cores in the CPU and return it to the function.
 #' 
 #' @param n_cores A number of cores
-#' @author Alexandre Rives
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @import parallel
-#' 
-#' @export
 #' 
 #' @return The number of cores.
 #' 
@@ -46,7 +60,7 @@ ncores <- function(n_cores){
 #' Process of returning a data set with re-coding features
 #' 
 #' @param x A data frame or matrix
-#' @author Alexandre Rives
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @import PCAmixdata
 #' @import tidytable
@@ -68,8 +82,7 @@ dummies <- function(x){
 #' 
 #' @param df dataframe
 #' @param x features
-#' @author Alexandre Rives
-#' 
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @export
 #' 
@@ -86,11 +99,9 @@ filtered_x <- function(df, x){
 #' 
 #' @param df A data frame or matrix
 #' @param y data of the target variable
-#' @author Alexandre Rives
-#' 
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @export
-#' 
 #' 
 #' @return A data set filtered by the target variable.
 #' 
@@ -104,7 +115,7 @@ filtered_y <- function(df, y){
 #' Process of returning a data set with re-coding the target variable
 #' 
 #' @param y data of the target variable
-#' @author Alexandre Rives
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @import tidytable
 #' 
@@ -122,17 +133,75 @@ dummies_y <- function(y){
 #' Process of returning a sampled dataset
 #' 
 #' @param df dataset
-#' @author Alexandre Rives
-#' 
-#' @import tidytable
-#' 
-#' @export
+#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
 #' @return A sampled dataset.
 #' 
 sampled_df <- function(df){
   rows <- sample(nrow(df))
-  sampled_df <- df[rows,]
-  return(sampled_df)
+  df_sampled <- df[rows,]
+  return(df_sampled)
 }
 
+#' Sigmoid function
+#'
+#' Formula of the sigmoid function
+#' 
+#' @param x dataset
+#' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @return sigmoid
+#' 
+sigmoid <- function(x){
+  res = 1 / (1 + exp(x))
+  return(res)
+}
+
+#' Add constant function
+#'
+#' Process of adding a constant into the dataframe
+#' 
+#' @param X X dataset
+#' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @return X dataset with the constant
+#' 
+add_constant <- function(X){
+  X = as.matrix(X)
+  X_bis = cbind(1,X)
+  return(X_bis)
+}
+
+#' Mini batch
+#'
+#' Take a number of lines of the dataset
+#' 
+#' @param df dataset without the last mini batch
+#' @param df_initial full dataset
+#' @param nb_batch size of the batch
+#' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @return a mini batch
+#' 
+df_mini_batch <- function(df, df_initial, nb_batch){
+  if (nrow(df) < nb_batch){
+    return(rbind(df, sampled_df(df_initial)))
+  } else {
+    return(df)
+  }
+}
+
+#' Log Loss function
+#'
+#' The function that return 
+#' 
+#' @param y_pred the y predicted
+#' @param y targets 
+#' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @return the mean of the losses
+#' 
+log_loss_function <- function(y_pred, y){
+  loss = mean((-y * log(y_pred)) - ((1-y) * log(1-y_pred)))
+  return(loss)
+}

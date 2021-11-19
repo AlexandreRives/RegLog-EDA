@@ -16,5 +16,5 @@ A re-coding quantitative data of the target variable.
 Process of returning a data set with re-coding the target variable
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }

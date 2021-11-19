@@ -18,5 +18,5 @@ A data set filtered by the target variable.
 Process of returning a data set filtered by the target variable
 }
 \author{
-Alexandre Rives
+Frintz Elisa, NDiaye Deffa, Rives Alexandre
 }
