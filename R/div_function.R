@@ -6,6 +6,8 @@
 #' @param data A data frame or matrix
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
+#' @export
+#' 
 #' @return a filtered dataframe
 #' 
 f_Formula <- function(formula,data) {
@@ -39,6 +41,8 @@ normalize <- function(x){
 #' 
 #' @param n_cores A number of cores
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @export
 #' 
 #' @import parallel
 #' 
@@ -135,6 +139,8 @@ dummies_y <- function(y){
 #' @param df dataset
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
+#' @export
+#' 
 #' @return A sampled dataset.
 #' 
 sampled_df <- function(df){
@@ -164,6 +170,8 @@ sigmoid <- function(x){
 #' @param X X dataset
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
 #' 
+#' @export
+#' 
 #' @return X dataset with the constant
 #' 
 add_constant <- function(X){
@@ -180,6 +188,8 @@ add_constant <- function(X){
 #' @param df_initial full dataset
 #' @param nb_batch size of the batch
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @export
 #' 
 #' @return a mini batch
 #' 
@@ -198,6 +208,8 @@ df_mini_batch <- function(df, df_initial, nb_batch){
 #' @param y_pred the y predicted
 #' @param y targets 
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @export
 #' 
 #' @return the mean of the losses
 #' 

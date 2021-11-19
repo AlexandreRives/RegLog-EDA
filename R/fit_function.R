@@ -22,7 +22,7 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
     stop("This is not a data.frame")
   }
 
-  df <- LogRegEDA:::f_Formula(formula,data)
+  df <- f_Formula(formula,data)
   y <- df[1]
   X <- df[,-1]
 
@@ -37,11 +37,11 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
   #gradient descent
 
   if (mode == "batch"){
-    coefs <- LogRegEDA:::batch_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
+    coefs <- batch_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
   } else if (mode == "online"){
-    coefs <- LogRegEDA:::online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
+    coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
   } else if (mode == "mini_batch"){
-    coefs <- LogRegEDA:::gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,nb_iteration)
+    coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,nb_iteration)
   }
 
 
@@ -69,14 +69,14 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
 
 
 #surcharge de print
-print.fit_reg_log <- function(object){
-  #affichage de la liste des variables
-  cat("Variables : ", colnames(object$df),"\n")
+# print.fit_reg_log <- function(object){
+#   #affichage de la liste des variables
+#   cat("Variables : ", colnames(object$df),"\n")
+# 
+# }
 
-}
 
-
-fit_reg_log(Species~.,data=iris,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
+#fit_reg_log(Species~.,data=iris,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
 
 # Etape 5 : Sortir toutes les metriques neccessaires
 
@@ -84,10 +84,7 @@ fit_reg_log(Species~.,data=iris,mode="batch",normalize = TRUE,learning_rate =0.0
 # Etape finale : Création de l'objet fit_reg_log de TYPE S3 dont les méthodes génériques "print" et "summary" au moins sont surchargées
 
 
-return(obj_fit_reg_log) # Retourner un objet de type S3 }
-
-iris
-?log_loss_function
+#return(obj_fit_reg_log) # Retourner un objet de type S3 }
 
 
 

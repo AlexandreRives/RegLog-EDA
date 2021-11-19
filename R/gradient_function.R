@@ -9,6 +9,8 @@
 #' @param max_iter number of iterations
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @export
 #'
 #' @return list of theta and the cost list
 #'
@@ -49,6 +51,8 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
 #' @param max_iter number of iterations
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @export
 #'
 #' @return list of theta and the cost list
 #'
@@ -100,6 +104,8 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 #' @param nb_batch batch size
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @export
 #'
 #' @return list of theta and the cost list
 #'
