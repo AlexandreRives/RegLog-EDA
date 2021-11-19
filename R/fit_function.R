@@ -29,15 +29,14 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
   #normalization
   if(normalize == TRUE){
     X <- normalize(X)
-
-  }else{
-    X <- df[,-1]
-
   }
+
   #gradient descent
 
   if (mode == "batch"){
+
     coefs <- batch_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
+
   } else if (mode == "online"){
     coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
   } else if (mode == "mini_batch"){
@@ -48,11 +47,13 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
   #return(coefs)
 
   #instanciation
-  instance <- list()
-  instance$df <- data
-  instance$coefficients <-coefs
-  class(instance) <- "reg_log"
-  return(instance)
+  objet <- list()
+  objet$coefficients <-coefs
+  objet$features <- colnames(X)
+  objet$target <- colnames(y)
+  objet$norm <- normalize
+  class(objet) <- "reg_log"
+  return(objet)
 
 }
 
@@ -62,24 +63,34 @@ fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learni
 
 #Null Deviance
 
+
 #Residual Deviance
 
 
 #AIC
 
 
-#surcharge de print
-# print.fit_reg_log <- function(object){
-#   #affichage de la liste des variables
-#   cat("Variables : ", colnames(object$df),"\n")
-# 
-# }
+#print
+print.reg_log <- function(object){
+  #affichage de la liste des variables
+  cat("------------------------------------------------------------------ \n")
+  cat("Results of the logistic regression \n")
+  cat("target : ", object$target,"\n")
+  cat("features : ", object$features,"\n")
+  cat("Coefficients : ", object$coefficients$best_theta, "\n")
+  cat("------------------------------------------------------------------ \n")
+
+ }
+
+#summary
 
 
-#fit_reg_log(Species~.,data=iris,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
+obj<-fit_reg_log(coeur~.,data=heart,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
 
+
+print(obj)
 # Etape 5 : Sortir toutes les metriques neccessaires
-
+heart <- read.table("C:/Users/dia/Downloads/heart_propre.csv",header=T)
 
 # Etape finale : Création de l'objet fit_reg_log de TYPE S3 dont les méthodes génériques "print" et "summary" au moins sont surchargées
 

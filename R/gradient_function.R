@@ -9,12 +9,13 @@
 #' @param max_iter number of iterations
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#' 
+#'
 #' @export
 #'
 #' @return list of theta and the cost list
 #'
 batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
+
   # Initializing theta
   theta = rep(1, times = length(var_X) + 1)
 
@@ -33,9 +34,14 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
     cost = log_loss_function(y_pred = h, y = y_df)
     cost_list = c(cost_list, cost)
     theta = theta - (learning_rate * gradient)
+
   }
 
+
+
   best_theta  = theta
+
+
 
   return(list(best_theta  = best_theta, cost_list = cost_list))
 }
@@ -51,7 +57,7 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
 #' @param max_iter number of iterations
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#' 
+#'
 #' @export
 #'
 #' @return list of theta and the cost list
@@ -104,7 +110,7 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 #' @param nb_batch batch size
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#' 
+#'
 #' @export
 #'
 #' @return list of theta and the cost list
