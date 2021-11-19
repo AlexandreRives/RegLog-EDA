@@ -1,41 +1,94 @@
 #' Fit function
 #'
 #' Function that return a trained dataset using the gradient descent.
-#' 
+#'
 #' @param formula the data frame
 #' @param data the data frame
 #' @param ncores the number of cores to run the fit function faster. It's better to use it with more than 10 000 data.
 #' @param batch_size the number of observations for the mini batch mode.
 #' @param normalize TRUE if you want to scale your features. It doesn't take the qualitative data.
-#' 
+#'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return A fitted dataset
-#' 
-fit <- function(formula, data, ncores, batch_size, norm){
-  if(data == NULL){
-    print("You should enter a data set.")
+#'
+fit_reg_log <- function(formula,data, mode, batch_size, normalize = FALSE,learning_rate,nb_iteration){
+
+  #data.frame control
+  ok <- is.data.frame(data)
+  if (!ok){
+    stop("This is not a data.frame")
   }
-  else{
-    vector_x_y <- f_Formula(data)
-    df_x <- filtered_x(data[vector_x_y[1]])
-    df_y <- filtered_y(data[vector_x_y[2]])
-    if(norm == TRUE){
-      df_x_normalize <- normalize(df_x)
-      df_x_dummies <- dummies(df_x)
-      df_x_final <- cbind(df_x_dummies, df_x_normalize)
-      df_y_dummies <- dummies(df_y)
-    }else{
-      df_x_dummies <- dummies(df_x)
-      split_df_x <- splitmix(df_x)
-      df_x_quanti <- split_df_x$X.quanti
-      df_x_final <- cbind(df_x_dummies, df_x_quanti)
-      df_y_dummies <- dummies(df_y)
-    }
+
+  df <- LogRegEDA:::f_Formula(formula,data)
+  y <- df[1]
+  X <- df[,-1]
+
+  #normalization
+  if(normalize == TRUE){
+    X <- normalize(X)
+
+  }else{
+    X <- df[,-1]
+
   }
+  #gradient descent
+
+  if (mode == "batch"){
+    coefs <- LogRegEDA:::batch_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
+  } else if (mode == "online"){
+    coefs <- LogRegEDA:::online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,nb_iteration)
+  } else if (mode == "mini_batch"){
+    coefs <- LogRegEDA:::gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,nb_iteration)
+  }
+
+
+  #return(coefs)
+
+  #instanciation
+  instance <- list()
+  instance$df <- data
+  instance$coefficients <-coefs
+  class(instance) <- "reg_log"
+  return(instance)
+
 }
+
+
+
+#Metrics
+
+#Null Deviance
+
+#Residual Deviance
+
+
+#AIC
+
+
+#surcharge de print
+print.fit_reg_log <- function(object){
+  #affichage de la liste des variables
+  cat("Variables : ", colnames(object$df),"\n")
+
+}
+
+
+fit_reg_log(Species~.,data=iris,mode="batch",normalize = TRUE,learning_rate =0.01 ,nb_iteration = 2)
+
+# Etape 5 : Sortir toutes les metriques neccessaires
+
+
+# Etape finale : Création de l'objet fit_reg_log de TYPE S3 dont les méthodes génériques "print" et "summary" au moins sont surchargées
+
+
+return(obj_fit_reg_log) # Retourner un objet de type S3 }
+
+iris
+?log_loss_function
+
 
 
 
