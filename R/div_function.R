@@ -6,6 +6,8 @@
 #' @param data A data frame or matrix
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
+#' @import  stats
+#' 
 #' @export
 #' 
 #' @return a filtered dataframe

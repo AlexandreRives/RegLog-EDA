@@ -4,20 +4,20 @@
 \alias{gradient_mini_batch}
 \title{Mini_batch gradient descent}
 \usage{
-gradient_mini_batch(df, Var_X, Var_y, nb_batch, learning_rate, max_iter)
+gradient_mini_batch(df, var_X, var_y, nb_batch, learning_rate, max_iter)
 }
 \arguments{
 \item{df}{dataset}
+
+\item{var_X}{names of the X columns}
+
+\item{var_y}{names of the Y columns}
 
 \item{nb_batch}{batch size}
 
 \item{learning_rate}{the learning rate}
 
 \item{max_iter}{number of iterations}
-
-\item{var_X}{names of the X columns}
-
-\item{var_y}{names of the Y columns}
 }
 \value{
 list of theta and the cost list

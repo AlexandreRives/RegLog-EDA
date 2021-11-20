@@ -115,10 +115,10 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 #'
 #' @return list of theta and the cost list
 #'
-gradient_mini_batch <- function(df, Var_X, Var_y, nb_batch, learning_rate, max_iter){
+gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_iter){
 
   # Initializing theta
-  theta = rep(1, times = length(Var_X) + 1)
+  theta = rep(1, times = length(var_X) + 1)
 
   # Saving initial dataset
   df_init = df
@@ -134,8 +134,8 @@ gradient_mini_batch <- function(df, Var_X, Var_y, nb_batch, learning_rate, max_i
     df = df[-c(1:nb_batch),]
 
     # X != y
-    X_df = df_mini[, Var_X]
-    y_df = df_mini[, Var_y]
+    X_df = df_mini[, var_X]
+    y_df = df_mini[, var_y]
 
     X = add_constant(X_df)
     Z = X %*% theta

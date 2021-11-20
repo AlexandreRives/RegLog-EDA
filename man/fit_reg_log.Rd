@@ -11,21 +11,30 @@ fit_reg_log(
   batch_size,
   normalize = FALSE,
   learning_rate,
-  nb_iteration
+  iter,
+  ncores = 1
 )
 }
 \arguments{
-\item{formula}{the data frame}
+\item{formula}{Enter the target and the feature.}
 
-\item{data}{the data frame}
+\item{data}{the data frame.}
+
+\item{mode}{choose between : batch, mini-batch or online.}
 
 \item{batch_size}{the number of observations for the mini batch mode.}
 
 \item{normalize}{TRUE if you want to scale your features. It doesn't take the qualitative data.}
 
-\item{ncores}{the number of cores to run the fit function faster. It's better to use it with more than 10 000 data.}
+\item{learning_rate}{used for the gradient descent.}
+
+\item{iter}{number of iterations.}
+
+\item{ncores}{the number of cores to run the fit function faster.}
 }
 \value{
+object used to the predicted part
+
 A fitted dataset
 }
 \description{
