@@ -78,7 +78,7 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
 #'
 #' @return A list
 #'
-predict <- function(object, newdata, type){
+predict_reg_log <- function(object, newdata, type){
   
   # Part 1 : Create a new data
   X_newdata = newdata[, object$features]
