@@ -15,7 +15,7 @@ log_loss_function(y_pred, y)
 the mean of the losses
 }
 \description{
-The function that return
+The function that return the log loss function
 }
 \author{
 Alexandre Rives, NDiaye Deffa, Frintz Elisa

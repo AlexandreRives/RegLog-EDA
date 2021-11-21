@@ -40,8 +40,11 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   #normalization
   if(normalize == TRUE){
     X <- normalize(X)
+    df <- cbind(X, y)
   }
-
+  
+  ncores <- ncores(ncores)
+  
   #gradient descent
   if (mode == "batch"){
     coefs <- batch_gradient_descent(df,colnames(X),colnames(y),learning_rate,iter)
@@ -51,6 +54,9 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,iter)
   }
   
+  #Summary residuals
+  sum_res <- residuals_summary_function(coefs$residuals)
+  
   #class
   object <- list()
   object$coefficients <- coefs$best_theta
@@ -59,6 +65,7 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   object$target <- colnames(y)
   object$norm <- normalize
   object$call <- call
+  object$summary_residuals <- sum_res
   class(object) <- "reg_log"
   return(object)
 
@@ -91,12 +98,12 @@ predict_reg_log <- function(object, newdata, type){
   # Part 3 : Print coefs or appliance class
   if(type == "probs"){
     prob = sigmoid(prob)
-  }else{
+    print(prob)
+  }else if(type == "class"){
     class_pred = ifelse(prob > 0.5, 1, 0)
+    print(class_pred)
   }
 }
-
-
 
 #Metrics
 
@@ -126,7 +133,7 @@ print.reg_log <- function(x, ...){
   cat("Results of the logistic regression \n")
   cat("target : ", x$target,"\n")
   cat("features : ", x$features,"\n")
-  cat("Coefficients : ", x$coefficients$best_theta, "\n")
+  cat("Coefficients : ", x$coefficients, "\n")
   cat("------------------------------------------------------------------ \n")
 }
 
@@ -144,21 +151,34 @@ print.reg_log <- function(x, ...){
 #' @export
 #'
 summary.reg_log <- function(object, ...){
-  cat("------------------------------------------------------------------ \n")
+  
+  df_print <- as.data.frame(rbind(c(object$coefficients)))
+  colnames(df_print) <- c("(Intercept)", object$features)
+  
+  cat("######################################################################################################## \n")
+  cat("\n")
   cat("Results of the logistic regression : \n")
   cat("Call : \n", paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+  cat("Deviance Residuals :")
+  cat("\n")
+  print(object$summary_residuals)
+  cat("\n")
   cat("Coefficients & Features : ")
   cat("\n")
-  write.table(object$coefficients)
-  cat("------------------------------------------------------------------ \n")
+  print(df_print)
+  cat("\n")
+  cat("####################################################################################################### \n")
+  
 }
 
-# obj<-fit_reg_log(recode~.,data=breast,mode="batch",normalize = TRUE,learning_rate =0.01 ,iter = 100)
+
+#obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 ,iter = 1000)
+# 
+# obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
+# 
+# fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
+# 
 # summary(obj)
-
-
-
-
 
 
 

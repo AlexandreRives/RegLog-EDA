@@ -205,7 +205,7 @@ df_mini_batch <- function(df, df_initial, nb_batch){
 
 #' Log Loss function
 #'
-#' The function that return 
+#' The function that return the log loss function
 #' 
 #' @param y_pred the y predicted
 #' @param y targets 
@@ -219,3 +219,32 @@ log_loss_function <- function(y_pred, y){
   loss = mean((-y * log(y_pred)) - ((1-y) * log(1-y_pred)))
   return(loss)
 }
+
+
+#' Residuals summary 
+#'
+#' The function that return the residuals summary
+#' 
+#' @param residuals residuals list
+#' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @export
+#' 
+#' @return residuals summary
+#' 
+residuals_summary_function <- function(residuals){
+
+  mean <- mean(residuals)
+  Q1 <- quantile(residuals, 0.25)
+  median <- median(residuals)
+  Q3 <- quantile(residuals, 0.75)
+  min <- min(residuals)
+  max <- max(residuals)
+  
+  summary_residuals <- as.data.frame(rbind(round(c(min, Q1, median, Q3, max, mean),4)))
+  colnames(summary_residuals) <- c('Min', 'Q1', 'Median', 'Q3', 'Max', 'Mean')
+  
+  return(summary_residuals)
+}
+
+
