@@ -6,7 +6,7 @@
 #' @param data A data frame or matrix
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #' 
-#' @import  stats
+#' @import stats
 #' 
 #' @export
 #' 
@@ -46,7 +46,7 @@ normalize <- function(x){
 #' 
 #' @export
 #' 
-#' @import parallel
+#' @import doParallel
 #' 
 #' @return The number of cores.
 #' 
@@ -233,7 +233,7 @@ log_loss_function <- function(y_pred, y){
 #' @return residuals summary
 #' 
 residuals_summary_function <- function(residuals){
-
+  
   mean <- mean(residuals)
   Q1 <- quantile(residuals, 0.25)
   median <- median(residuals)
@@ -246,5 +246,3 @@ residuals_summary_function <- function(residuals){
   
   return(summary_residuals)
 }
-
-

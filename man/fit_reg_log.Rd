@@ -11,7 +11,7 @@ fit_reg_log(
   batch_size,
   normalize = FALSE,
   learning_rate,
-  iter,
+  max_iter,
   ncores = 1
 )
 }
@@ -28,7 +28,7 @@ fit_reg_log(
 
 \item{learning_rate}{used for the gradient descent.}
 
-\item{iter}{number of iterations.}
+\item{max_iter}{number of iterations.}
 
 \item{ncores}{the number of cores to run the fit function faster.}
 }

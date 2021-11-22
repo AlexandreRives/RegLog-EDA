@@ -7,23 +7,27 @@
 #' @param mode choose between : batch, mini-batch or online.
 #' @param batch_size the number of observations for the mini batch mode.
 #' @param normalize TRUE if you want to scale your features. It doesn't take the qualitative data.
-#' @param iter number of iterations.
+#' @param max_iter number of iterations.
 #' @param learning_rate used for the gradient descent.
 #' @param ncores the number of cores to run the fit function faster.
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #'
 #' @return object used to the predicted part
+#' 
+#' @import doParallel
+#' @import foreach
+#' @import parallel
 #'
 #' @export
 #'
 #' @return A fitted dataset
 #'
-fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, iter, ncores = 1){
-
+fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, max_iter, ncores = 1){
+  
   call <- match.call()
-
-  #data.frame control
+  
+  #Test
   ok <- is.data.frame(data)
   if (!ok){
     stop("This is not a data.frame")
@@ -31,41 +35,58 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   if(nrow(data) == 0){
     stop("You should enter data")
   }
-
+  # if(mode != "mini_batch" | mode != "batch" | mode != "online"){
+  #   stop("Wrong mode, please enter one of these : 'batch', 'mini_batch' or 'online'")
+  # }
+  if(batch_size < 1){
+    stop("You should enter a batch size greater than 1")
+  }
+  if(batch_size > nrow(data)){
+    stop("The batch size can't be greater than the length of the dataset")
+  }
+  if(learning_rate <= 0){
+    stop("The learning rate must be greater than 0")
+  }
+  if(max_iter <= 0){
+    stop("Max iter has to be greater than 0")
+  }
+  
+  
   #separate features from target
   df <- f_Formula(formula,data)
   y <- df[1]
   X <- df[,-1]
-
+  
   #normalization
   if(normalize == TRUE){
     X <- normalize(X)
     df <- cbind(X, y)
   }
-
+  
   ncores <- ncores(ncores)
   blocs <- split(df, 1 + (1:nrow(df)) %% ncores)
   cl <- makeCluster(ncores)
   registerDoParallel(cl)
-
+  
   #gradient descent
   if (mode == "batch"){
     coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, iter)
+      coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
     }
     #coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, iter)
   } else if (mode == "online"){
-    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- online_stochastic_gradient_descent(df, colnames(X), colnames(y), learning_rate, iter)
+    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("online_stochastic_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
+      coefs <- online_stochastic_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
     }
     #coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,iter)
   } else if (mode == "mini_batch"){
-    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- gradient_mini_batch(df, colnames(X), colnames(y), learning_rate, iter)
+    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("gradient_mini_batch", "sampled_df", "df_mini_batch", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
+      coefs <- gradient_mini_batch(df, colnames(X), colnames(y), batch_size, learning_rate, max_iter)
     }
     #coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,iter)
   }
   stopCluster(cl)
+<<<<<<< HEAD
 
   #Null Deviance
 
