@@ -67,6 +67,16 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   }
   stopCluster(cl)
 
+  #Null Deviance
+
+  Null_Deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
+
+  #AIC
+
+  AIC<- AIC_function(logLikelihood_function(coefs$best_theta,df),df)
+
+
+
   #Summary residuals
   sum_res <- residuals_summary_function(coefs$residuals)
 
@@ -79,6 +89,8 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   object$norm <- normalize
   object$call <- call
   object$summary_residuals <- sum_res
+  object$Null_Deviance<-Null_Deviance
+  object$AIC<-AIC
   class(object) <- "reg_log"
   return(object)
 
@@ -149,6 +161,8 @@ print.reg_log <- function(x, ...){
   cat("target : ", x$target,"\n")
   cat("features : ", x$features,"\n")
   cat("Coefficients : ", x$coefficients, "\n")
+  cat("Null Deviance : ", x$Null_Deviance , "\n")
+  cat("AIC : ", x$AIC, "\n")
   cat("------------------------------------------------------------------ \n")
 }
 
@@ -187,16 +201,19 @@ summary.reg_log <- function(object, ...){
 }
 
 
+heart<- read.table("C:/Users/dia/Downloads/heart_propre.csv")
+
+
 # tic()
 # obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 ,iter = 1000, ncores = 3)
 # toc()
 #
-# obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
+#obj <- fit_reg_log(coeur~., data=heart, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
 #
 # fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
 #
-# summary(obj)
+#summary(obj)
 
+#print(obj)
 
-
-
+#glm(coeur~., data=heart)
