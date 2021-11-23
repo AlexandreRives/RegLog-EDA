@@ -260,7 +260,6 @@ residuals_summary_function <- function(residuals){
 #'
 #' @return the Log-Likelihood
 #'
-
 logLikelihood_function<-function (coef,df){
   i<-1
   somme<-list()
@@ -295,8 +294,6 @@ logLikelihood_function<-function (coef,df){
 #'
 #' @return the AIC of the model
 #'
-
-
 AIC_function<-function(LL,df){
 
   AIC<-(-2*LL+2*ncol(df))

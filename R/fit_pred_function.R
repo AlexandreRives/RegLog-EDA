@@ -24,6 +24,9 @@
 #' @return A fitted dataset
 #'
 fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, max_iter, ncores = 1){
+  
+  library(PCAmixdata)
+  library(doParallel)
 
   call <- match.call()
 
@@ -93,15 +96,14 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
 
 
   #Null Deviance
-
-  Null_Deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
+  null_deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
 
   #AIC
-
   AIC<- AIC_function(logLikelihood_function(coefs$best_theta,df),df)
 
-
-
+  # Degrees of freedom
+  ddl_null_deviance <-   nrow(data) - 1
+  ddl_residual_deviance <- nrow(data) - ncol(X) - 1
 
   #Summary residuals
   sum_res <- residuals_summary_function(coefs$residuals)
@@ -115,8 +117,10 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   object$norm <- normalize
   object$call <- call
   object$summary_residuals <- sum_res
-  object$Null_Deviance<-Null_Deviance
-  object$AIC<-AIC
+  object$null_deviance <- null_deviance
+  object$AIC <- AIC
+  object$ddl_null_deviance <- ddl_null_deviance
+  object$ddl_residual_deviance <- ddl_residual_deviance
   class(object) <- "reg_log"
   return(object)
 
@@ -158,18 +162,6 @@ predict_reg_log <- function(object, newdata, type){
   }
 }
 
-#Metrics
-
-
-#Null Deviance
-
-
-#Residual Deviance
-
-
-#AIC
-
-
 #' Fit function
 #'
 #' Function that print the elements of the fitted object
@@ -182,15 +174,7 @@ predict_reg_log <- function(object, newdata, type){
 #' @export
 #'
 print.reg_log <- function(x, ...){
-
-  cat("------------------------------------------------------------------ \n")
-  cat("Results of the logistic regression \n")
-  cat("target : ", x$target,"\n")
-  cat("features : ", x$features,"\n")
-  cat("Coefficients : ", x$coefficients, "\n")
-  cat("Null Deviance : ", x$Null_Deviance , "\n")
-  cat("AIC : ", x$AIC, "\n")
-  cat("------------------------------------------------------------------ \n")
+  
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
 
@@ -203,6 +187,9 @@ print.reg_log <- function(x, ...){
   cat("\n")
   print(df_print)
   cat("\n")
+  cat("Degrees of Freedom :", x$ddl_null_deviance, "Total (- intercept);",  x$ddl_residual_deviance ,"Residual\n")
+  cat("Null Deviance : ", x$null_deviance , "\n")
+  cat("AIC : ", x$AIC, "\n")
   cat("############################################################################################################### \n")
 
 }
@@ -237,34 +224,18 @@ summary.reg_log <- function(object, ...){
   cat("\n")
   print(df_print)
   cat("\n")
+  cat("Null Deviance : ", object$null_deviance , "on", object$ddl_null_deviance, "degrees of freedom\n")
+  cat("Residual deviance : ", "on", object$ddl_residual_deviance, "degrees of freedom\n")
+  cat("AIC : ", object$AIC, "\n")
   cat("############################################################################################################### \n")
 
 }
-
-
-#heart<- read.table("C:/Users/dia/Downloads/heart_propre.csv")
-
 
 # tic()
 obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
 # toc()
 
-#
-#obj <- fit_reg_log(coeur~., data=heart, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
-#
-# fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
-#
-#summary(obj)
-
-#print(obj)
-
-
-
-# obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
-#
-# fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
-#
 summary(obj)
 print(obj)
 
-#glm(coeur~., data=heart)
+
