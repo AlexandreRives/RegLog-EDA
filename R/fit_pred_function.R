@@ -35,14 +35,18 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   if(nrow(data) == 0){
     stop("You should enter data")
   }
-  # if(mode != "mini_batch" | mode != "batch" | mode != "online"){
-  #   stop("Wrong mode, please enter one of these : 'batch', 'mini_batch' or 'online'")
-  # }
-  if(batch_size < 1){
-    stop("You should enter a batch size greater than 1")
+  if((mode != "mini_batch") & (mode != "batch") & (mode != "online")){
+    stop("Wrong mode, please enter one of these : 'batch', 'mini_batch' or 'online'")
   }
-  if(batch_size > nrow(data)){
-    stop("The batch size can't be greater than the length of the dataset")
+  if(mode == "mini_batch"){
+    if(batch_size < 1){
+      stop("You should enter a batch size greater than 1")
+    }
+  }
+  if(mode == "mini_batch"){
+    if(batch_size > nrow(data)){
+      stop("The batch size can't be greater than the length of the dataset")
+    }
   }
   if(learning_rate <= 0){
     stop("The learning rate must be greater than 0")
@@ -216,7 +220,7 @@ summary.reg_log <- function(object, ...){
 
 
 # tic()
-#obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
+obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
 # toc()
 
 
@@ -224,6 +228,6 @@ summary.reg_log <- function(object, ...){
 #
 # fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
 #
-# summary(obj)
-# print(obj)
+summary(obj)
+print(obj)
 
