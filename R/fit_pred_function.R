@@ -14,7 +14,7 @@
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #'
 #' @return object used to the predicted part
-#' 
+#'
 #' @import doParallel
 #' @import foreach
 #' @import parallel
@@ -24,9 +24,9 @@
 #' @return A fitted dataset
 #'
 fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, max_iter, ncores = 1){
-  
+
   call <- match.call()
-  
+
   #Test
   ok <- is.data.frame(data)
   if (!ok){
@@ -54,24 +54,24 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   if(max_iter <= 0){
     stop("Max iter has to be greater than 0")
   }
-  
-  
+
+
   #separate features from target
   df <- f_Formula(formula,data)
   y <- df[1]
   X <- df[,-1]
-  
+
   #normalization
   if(normalize == TRUE){
     X <- normalize(X)
     df <- cbind(X, y)
   }
-  
+
   ncores <- ncores(ncores)
   blocs <- split(df, 1 + (1:nrow(df)) %% ncores)
   cl <- makeCluster(ncores)
   registerDoParallel(cl)
-  
+
   #gradient descent
   if (mode == "batch"){
     coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
@@ -90,10 +90,22 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     #coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,iter)
   }
   stopCluster(cl)
-  
+
+
+  #Null Deviance
+
+  Null_Deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
+
+  #AIC
+
+  AIC<- AIC_function(logLikelihood_function(coefs$best_theta,df),df)
+
+
+
+
   #Summary residuals
   sum_res <- residuals_summary_function(coefs$residuals)
-  
+
   #class
   object <- list()
   object$coefficients <- coefs$best_theta
@@ -103,9 +115,11 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   object$norm <- normalize
   object$call <- call
   object$summary_residuals <- sum_res
+  object$Null_Deviance<-Null_Deviance
+  object$AIC<-AIC
   class(object) <- "reg_log"
   return(object)
-  
+
 }
 
 
@@ -125,15 +139,15 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
 #' @return A list
 #'
 predict_reg_log <- function(object, newdata, type){
-  
+
   # Part 1 : Create a new data
   X_newdata = newdata[, object$features]
   if (object$norm == TRUE) {X_newdata = as.data.frame(apply(X_newdata, 2, scale))}
   X_newdata = add_constant(X_newdata)
-  
+
   # Part 2 : Set the coefs on the new data
   prob = X_newdata %*% object$coefficients
-  
+
   # Part 3 : Print coefs or appliance class
   if(type == "posterior"){
     prob = sigmoid(prob)
@@ -168,10 +182,18 @@ predict_reg_log <- function(object, newdata, type){
 #' @export
 #'
 print.reg_log <- function(x, ...){
-  
+
+  cat("------------------------------------------------------------------ \n")
+  cat("Results of the logistic regression \n")
+  cat("target : ", x$target,"\n")
+  cat("features : ", x$features,"\n")
+  cat("Coefficients : ", x$coefficients, "\n")
+  cat("Null Deviance : ", x$Null_Deviance , "\n")
+  cat("AIC : ", x$AIC, "\n")
+  cat("------------------------------------------------------------------ \n")
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
-  
+
   cat("############################################################################################################### \n")
   cat("\n")
   cat("Results of the logistic regression : \n")
@@ -182,6 +204,7 @@ print.reg_log <- function(x, ...){
   print(df_print)
   cat("\n")
   cat("############################################################################################################### \n")
+
 }
 
 #' Fit function
@@ -198,10 +221,10 @@ print.reg_log <- function(x, ...){
 #' @export
 #'
 summary.reg_log <- function(object, ...){
-  
+
   df_print <- as.data.frame(rbind(c(object$coefficients)))
   colnames(df_print) <- c("(Intercept)", object$features)
-  
+
   cat("############################################################################################################### \n")
   cat("\n")
   cat("Results of the logistic regression : \n")
@@ -215,13 +238,26 @@ summary.reg_log <- function(object, ...){
   print(df_print)
   cat("\n")
   cat("############################################################################################################### \n")
-  
+
 }
+
+
+#heart<- read.table("C:/Users/dia/Downloads/heart_propre.csv")
 
 
 # tic()
 obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
 # toc()
+
+#
+#obj <- fit_reg_log(coeur~., data=heart, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
+#
+# fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 10, normalize = FALSE, learning_rate =0.1 ,iter = 1000)
+#
+#summary(obj)
+
+#print(obj)
+
 
 
 # obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = FALSE, learning_rate =0.1 ,iter = 1000)
@@ -231,3 +267,4 @@ obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learni
 summary(obj)
 print(obj)
 
+#glm(coeur~., data=heart)
