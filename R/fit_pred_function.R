@@ -24,7 +24,7 @@
 #' @return A fitted dataset
 #'
 fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, max_iter, ncores = 1){
-  
+
   library(PCAmixdata)
   library(doParallel)
 
@@ -174,7 +174,7 @@ predict_reg_log <- function(object, newdata, type){
 #' @export
 #'
 print.reg_log <- function(x, ...){
-  
+
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
 
@@ -232,10 +232,10 @@ summary.reg_log <- function(object, ...){
 }
 
 # tic()
-obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
+#obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
 # toc()
 
-summary(obj)
-print(obj)
+#summary(obj)
+#print(obj)
 
 
