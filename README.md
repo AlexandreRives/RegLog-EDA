@@ -42,7 +42,7 @@ Below, an example on how you have to use it :
 
 	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100)
 
-1 option can be used if you want to scale your dataset :
+One option can be used if you want to scale your dataset :
 normalize : FALSE by default.
 
 Using the $ after the fit object can give you an access to 3 lists :
@@ -102,6 +102,34 @@ You have obviously an access to the **print()** and **summary()** functions too 
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit_reg_log(formula = class ~ ., data = breast, mode = "online", batch_size = 10, learning_rate = 0.01, max_iter = 100)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "online", batch_size = 10, learning_rate = 0.01, max_iter = 100)
 
 You just have to change the mode and set it "online" to train your dataset.
+
+
+Predict function
+------------------------
+
+The predict function allows you to use the probability or the class predicted.
+
+### Posterior type
+
+	predict <- predict_reg_log(object = fit, newdata = test, type = "posterior")
+	
+### Class predicted type
+
+	predict <- predict_reg_log(object = fit, newdata = test, type = "class")
+
+
+Diverses functions
+------------------------
+
+To complete the package, we have provided 2 functions that allows you to encode your dataset :
+
+The first one encode your qualitative data, don't worry and put all your features inside :
+
+	dummies(x = X_data)
+
+The second one encode your target data :
+
+	dummies_y(y = target)
