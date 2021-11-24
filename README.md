@@ -121,7 +121,7 @@ The predict function allows you to use the probability or the class predicted.
 	predict <- predict_reg_log(object = fit, newdata = test, type = "class")
 
 
-Diverses functions
+Diverse functions
 ------------------------
 
 To complete the package, we have provided 2 functions that allows you to encode your dataset :
