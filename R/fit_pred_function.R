@@ -232,7 +232,8 @@ summary.reg_log <- function(object, ...){
 }
 
 # tic()
-#obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
+#obj <- fit_reg_log(coeur~., data=data, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
+#plot(obj$cost)
 # toc()
 
 #summary(obj)
