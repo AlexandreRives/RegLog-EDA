@@ -1,3 +1,10 @@
+#' -------------------------------------------------------#
+#' 
+#'                     LogRegEDA
+#'                Logistic Regression
+#'              
+#' -------------------------------------------------------#
+#' 
 #' Fit function
 #'
 #' Function that return a trained dataset using the gradient descent.
@@ -23,10 +30,7 @@
 #'
 #' @return A fitted dataset
 #'
-fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate, max_iter, ncores = 1){
-
-  library(PCAmixdata)
-  library(doParallel)
+fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate = 0.1, max_iter = 100, ncores = 1){
 
   call <- match.call()
 
@@ -59,7 +63,7 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   }
 
 
-  #separate features from target
+  #split features from target
   df <- f_Formula(formula,data)
   y <- df[1]
   X <- df[,-1]
@@ -77,20 +81,20 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
 
   #gradient descent
   if (mode == "batch"){
-    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
-    }
-    #coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, iter)
+    # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
+    #   coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
+    # }
+    coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
   } else if (mode == "online"){
-    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("online_stochastic_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- online_stochastic_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
-    }
-    #coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,iter)
+    # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("online_stochastic_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
+    #   coefs <- online_stochastic_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
+    # }
+    coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,max_iter)
   } else if (mode == "mini_batch"){
-    coefs <- foreach(i = blocs, .combine = "cbind", .export = c("gradient_mini_batch", "sampled_df", "df_mini_batch", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
-      coefs <- gradient_mini_batch(df, colnames(X), colnames(y), batch_size, learning_rate, max_iter)
-    }
-    #coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate,iter)
+    # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("gradient_mini_batch", "sampled_df", "df_mini_batch", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
+    #   coefs <- gradient_mini_batch(df, colnames(X), colnames(y), batch_size, learning_rate, max_iter)
+    # }
+    coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate, max_iter)
   }
   stopCluster(cl)
 
@@ -168,13 +172,15 @@ predict_reg_log <- function(object, newdata, type){
 #'
 #' @param x the fitted object
 #' @param ... other params
+#' 
+#' @import utils
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #'
 #' @export
 #'
 print.reg_log <- function(x, ...){
-
+  
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
 
@@ -190,6 +196,7 @@ print.reg_log <- function(x, ...){
   cat("Degrees of Freedom :", x$ddl_null_deviance, "Total (- intercept);",  x$ddl_residual_deviance ,"Residual\n")
   cat("Null Deviance : ", x$null_deviance , "\n")
   cat("AIC : ", x$AIC, "\n")
+  cat("\n")
   cat("############################################################################################################### \n")
 
 }
@@ -227,16 +234,16 @@ summary.reg_log <- function(object, ...){
   cat("Null Deviance : ", object$null_deviance , "on", object$ddl_null_deviance, "degrees of freedom\n")
   cat("Residual deviance : ", "on", object$ddl_residual_deviance, "degrees of freedom\n")
   cat("AIC : ", object$AIC, "\n")
+  cat("\n")
   cat("############################################################################################################### \n")
 
 }
 
 # tic()
-#obj <- fit_reg_log(coeur~., data=data, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
-#plot(obj$cost)
+#obj <- fit_reg_log(recode~., data=breast, mode="online", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
 # toc()
 
-#summary(obj)
-#print(obj)
+# summary(obj)
+# print(obj)
 
 

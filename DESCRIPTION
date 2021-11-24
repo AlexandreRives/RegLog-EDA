@@ -1,10 +1,10 @@
 Package: LogRegEDA
 Title: Logistic Regression
-Version: 0.0.0.9000
+Version: 1.0.0.0
 Authors@R: c(
-        person("Deffa", "Ndiaye", email = "dn@univ-lyon2.fr", role = c("aut", "cre")),
-        person("Elisa", "Frintz", email = "ef@univ-lyon2.fr", role = c("aut")),
-        person("Alexandre", "Rives", email = "a.rives@univ-lyon2.fr", role = c("aut"))
+        person("Deffa", "Ndiaye", email = "deffandiaye3@gmail.com", role = c("aut", "cre")),
+        person("Elisa", "Frintz", email = "elisafrintz@hotmail.fr", role = c("aut")),
+        person("Alexandre", "Rives", email = "alexandre.rives85@gmail.com", role = c("aut"))
         )
 Description: An implemantation of the logistic regression.
 License: GPL-2
@@ -19,3 +19,5 @@ Imports: doParallel,
   tidytable,
   utils,
   stats,
+Depends: 
+    R (>= 2.10)

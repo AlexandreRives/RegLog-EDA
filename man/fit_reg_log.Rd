@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_pred_function.R
 \name{fit_reg_log}
 \alias{fit_reg_log}
-\title{Fit function}
+\title{-------------------------------------------------------#}
 \usage{
 fit_reg_log(
   formula,
@@ -10,8 +10,8 @@ fit_reg_log(
   mode,
   batch_size,
   normalize = FALSE,
-  learning_rate,
-  max_iter,
+  learning_rate = 0.1,
+  max_iter = 100,
   ncores = 1
 )
 }
@@ -38,6 +38,15 @@ object used to the predicted part
 A fitted dataset
 }
 \description{
+\preformatted{                LogRegEDA
+           Logistic Regression
+}
+
+-------------------------------------------------------#
+}
+\details{
+Fit function
+
 Function that return a trained dataset using the gradient descent.
 }
 \author{
