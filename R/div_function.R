@@ -260,26 +260,26 @@ residuals_summary_function <- function(residuals){
 #'
 #' @return the Log-Likelihood
 #'
-logLikelihood_function<-function (coef,df){
+logLikelihood_function<-function (coef,x){
   i<-1
   somme<-list()
   pi<-list()
   LL<-list()
   logLikelihood<-0
-  for (i in 1:nrow(df)){
+  for (i in 1:nrow(x)){
 
-    somme[[i]]<-sum(df[i,]*coef)
+    somme[[i]]<-sum(x[i,2:ncol(x)]*coef[2:ncol(x)],coef[1])
     pi[[i]] <-exp(somme[[i]])/(1+exp(somme[[i]]))
 
-    LL[[i]]= (df[i,1]*log(pi[[i]]))+((1-df[1,1])*log(1-pi[[i]]))
+    LL[[i]]= x[i,1]*log(pi[[i]])+(1-x[i,1])*log(1-pi[[i]])
 
     logLikelihood<-logLikelihood+LL[[i]]
+
   }
 
   return(logLikelihood)
 
 }
-
 
 
 #' AIC
