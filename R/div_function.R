@@ -13,8 +13,8 @@
 #' @return a filtered dataframe
 #' @examples
 #'
-#' f_Formula (recode~.,data=breast)
-#' f_Formula (recode~clump+mitoses,data=breast)
+#' f_Formula (recode~.,data=iris)
+#' f_Formula (recode~clump+mitoses,data=iris)
 #'
 #'
 f_Formula <- function(formula,data) {
