@@ -1,6 +1,6 @@
 # LogRegEDA
 The LogRegEDA is a package which give you an easy way to instantiate the logistic regression using the stochastic gradient descent
-with three modes :
+with four modes :
 
 - Batch mode
 - Mini-batch mode
