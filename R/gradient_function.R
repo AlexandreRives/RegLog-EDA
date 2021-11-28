@@ -14,7 +14,7 @@
 #'
 #' @return list of theta and the cost list
 #'
-batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
+batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter, graph, epsilon){
 
   # Initializing theta
   theta = rep(1, times = length(var_X) + 1)
@@ -30,6 +30,12 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
   X_df = df[, var_X]
   y_df = df[, var_y]
 
+  if (graph == TRUE){
+    Sys.sleep(0.1)
+    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
+         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Batch")
+  }
+
   for (i in 1:max_iter){
 
     X = add_constant(X_df)
@@ -39,11 +45,25 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
 
     # Calculating the cost and adding it to the list
     cost = log_loss_function(y_pred = h, y = y_df)
+
+    # Calculating the last cost
+    last_cost = cost_list[length(cost_list)]
+
+    if (graph == TRUE){
+      Sys.sleep(0.1)
+      points(x = i, y = cost)
+    }
     cost_list = c(cost_list, cost)
 
     # Filling the residuals list
     residual <- y_df - h
     residuals <- c(residuals, residual)
+
+    # Testing convergence for break
+    if (max_iter > 1 & i > 1) {
+      diff = abs(last_cost-cost)
+      if (diff < epsilon) break
+    }
 
     # Update theta
     theta = theta - (learning_rate * gradient)
@@ -70,7 +90,7 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
 #'
 #' @return list of theta and the cost list
 #'
-online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter){
+online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter, graph, epsilon){
 
   # Initializing theta
   row_nb = sample(x = 1:nrow(df), size = 1)
@@ -81,6 +101,12 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 
   # Residuals
   residuals <- c()
+
+  if (graph == TRUE){
+    Sys.sleep(0.1)
+    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,2),
+         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Online")
+  }
 
   for (it in 1:max_iter){
 
@@ -103,7 +129,21 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 
         # Adding cost to the cost list
         cost = log_loss_function(y_pred = h, y = y_df[i])
+
+        # Calculating the last cost
+        last_cost = cost_list[length(cost_list)]
+
+        if (graph == TRUE){
+          Sys.sleep(0.1)
+          points(x = it, y = cost)
+        }
         cost_list = c(cost_list, cost)
+
+        # Testing convergence for break
+        if (max_iter > 1 & it > 1) {
+          diff = abs(last_cost-cost)
+          if (diff < epsilon) break
+        }
 
       }
 
@@ -132,7 +172,7 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 #'
 #' @return list of theta and the cost list
 #'
-gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_iter){
+gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_iter, graph, epsilon){
 
   # Initializing theta
   theta <- rep(1, times = length(var_X) + 1)
@@ -145,6 +185,12 @@ gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_i
 
   # Residuals
   residuals <- c()
+
+  if (graph == TRUE){
+    Sys.sleep(0.1)
+    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
+         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Mini-Batch")
+  }
 
   for (it in 1:max_iter){
     df <- df_mini_batch(df = df, df_initial = df_init, nb_batch = nb_batch)
@@ -164,11 +210,25 @@ gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_i
 
     # Calculating the cost and adding it to the list
     cost = log_loss_function(y_pred = h, y = y_df)
+
+    # Calculating the last cost
+    last_cost = cost_list[length(cost_list)]
+
+    if (graph == TRUE){
+      Sys.sleep(0.1)
+      points(x = it, y = cost)
+    }
     cost_list = c(cost_list, cost)
 
     # Filling the residuals list
     residual <- y_df - h
     residuals <- c(residuals, residual)
+
+    # Testing convergence for break
+    if (max_iter > 1 & it > 1) {
+      diff = abs(last_cost-cost)
+      if (diff < epsilon) break
+    }
 
     # Update theta
     theta = theta - (learning_rate * gradient)

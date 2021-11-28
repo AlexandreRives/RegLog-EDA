@@ -1,10 +1,10 @@
 #' -------------------------------------------------------#
-#' 
+#'
 #'                     LogRegEDA
 #'                Logistic Regression
-#'              
+#'
 #' -------------------------------------------------------#
-#' 
+#'
 #' Fit function
 #'
 #' Function that return a trained dataset using the gradient descent.
@@ -30,7 +30,7 @@
 #'
 #' @return A fitted dataset
 #'
-fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate = 0.1, max_iter = 100, ncores = 1){
+fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, learning_rate = 0.1, max_iter = 100, ncores = 1, graph, epsilon){
 
   call <- match.call()
 
@@ -62,7 +62,6 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     stop("Max iter has to be greater than 0")
   }
 
-
   #split features from target
   df <- f_Formula(formula,data)
   y <- df[1]
@@ -84,17 +83,17 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
     #   coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
     # }
-    coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
+    coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter, graph, epsilon) ; coefs
   } else if (mode == "online"){
     # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("online_stochastic_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
     #   coefs <- online_stochastic_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter)
     # }
-    coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,max_iter)
+    coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,max_iter, graph, epsilon)
   } else if (mode == "mini_batch"){
     # coefs <- foreach(i = blocs, .combine = "cbind", .export = c("gradient_mini_batch", "sampled_df", "df_mini_batch", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
     #   coefs <- gradient_mini_batch(df, colnames(X), colnames(y), batch_size, learning_rate, max_iter)
     # }
-    coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate, max_iter)
+    coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate, max_iter, graph, epsilon)
   }
   stopCluster(cl)
 
@@ -172,7 +171,7 @@ predict_reg_log <- function(object, newdata, type){
 #'
 #' @param x the fitted object
 #' @param ... other params
-#' 
+#'
 #' @import utils
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
@@ -180,7 +179,7 @@ predict_reg_log <- function(object, newdata, type){
 #' @export
 #'
 print.reg_log <- function(x, ...){
-  
+
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
 
@@ -240,9 +239,10 @@ summary.reg_log <- function(object, ...){
 }
 
 # tic()
-#obj <- fit_reg_log(recode~., data=breast, mode="online", normalize = TRUE, learning_rate =0.1 , max_iter = 100, ncores = 1)
-# toc()
-
+# obj <- fit_reg_log(recode~., data=breast, mode="batch", normalize = TRUE, learning_rate =0.1 , max_iter = 50, ncores = 1 , graph = TRUE, epsilon = 0.01) ; obj
+# # toc()
+# obj <- fit_reg_log(recode~., data=breast, mode="online", normalize = TRUE, learning_rate =0.1 , max_iter = 20, ncores = 1 , graph = TRUE, epsilon = 0.1) ; obj
+# obj <- fit_reg_log(recode~., data=breast, mode="mini_batch", batch_size = 200, normalize = TRUE, learning_rate =0.1 , max_iter = 50, ncores = 1 , graph = TRUE, epsilon = 0.0015) ; obj
 # summary(obj)
 # print(obj)
 
