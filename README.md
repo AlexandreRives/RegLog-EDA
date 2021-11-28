@@ -40,7 +40,7 @@ As we said, we have coded 3 different modes. Let's start with the batch :
 
 Below, an example on how you have to use it :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
 
 One option can be used if you want to scale your dataset :
 normalize : FALSE by default.
@@ -60,16 +60,25 @@ Here the summary function :
 
 	Results of the logistic regression : 
 	Call : 
-	fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100)
-	
-	Coefficients & Features : 
-  	(Intercept)       clump  ucellsize ucellshape mgadhesion    sepics    bnuclei bchromatin    normnucl   mitoses
-	1   0.9184764 -0.07252196 -0.1751895 -0.1463792 0.01758643 0.1406431 -0.2896429 0.04050536 -0.05746522 0.4983503
+	fit_reg_log(formula = class ~ ., data = train_breast, mode = "batch", 
+	    normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, 
+	    graph = FALSE, epsilon = 1e-05)
 
-	Degrees of Freedom : 698 Total (- intercept); 689 Residual
-	Null Deviance :  -6781.664 
-	AIC :  1087.696 
-	###############################################################################################################
+	Deviance Residuals :
+	      Min      Q1  Median     Q3 Max   Mean
+	1 -0.9975 -0.0274 -0.0097 0.0037   1 -7e-04
+
+	Coefficients & Features : 
+	  (Intercept)    clump  ucellsize ucellshape mgadhesion     sepics   bnuclei bchromatin   normnucl    mitoses
+	1    1.034724 -1.08406 -0.6294483 -0.7943087 -0.4462591 -0.3586972 -1.263574 -0.6778172 -0.4272717 -0.1065407
+
+	Null Deviance :  on 499 degrees of freedom
+	Residual deviance :  on 490 degrees of freedom
+	AIC :
+
+	Execution time : 0.241096 sec.
+
+	############################################################################################################### 
 
 
 Then the print function :
@@ -78,22 +87,28 @@ Then the print function :
 
 	Results of the logistic regression : 
 	Call : 
-	fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100)
+	fit_reg_log(formula = class ~ ., data = train_breast, mode = "batch", 
+	    normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, 
+	    graph = FALSE, epsilon = 1e-05)
+
 
 	Coefficients & Features : 
-  	(Intercept)       clump  ucellsize ucellshape mgadhesion    sepics    bnuclei bchromatin    normnucl   mitoses
-	1   0.9184764 -0.07252196 -0.1751895 -0.1463792 0.01758643 0.1406431 -0.2896429 0.04050536 -0.05746522 0.4983503
+	  (Intercept)    clump  ucellsize ucellshape mgadhesion     sepics   bnuclei bchromatin   normnucl    mitoses
+	1    1.034724 -1.08406 -0.6294483 -0.7943087 -0.4462591 -0.3586972 -1.263574 -0.6778172 -0.4272717 -0.1065407
 
-	Degrees of Freedom : 698 Total (- intercept); 689 Residual
-	Null Deviance :  -6781.664 
-	AIC :  1087.696 
+	Degrees of Freedom : 499 Total (- intercept); 490 Residual
+	Null Deviance :
+	AIC :
+
+	Execution time : 0.241096 sec.
+
 	############################################################################################################### 
 	
 ### Mini-batch mode
 
 As the batch mode, you have to use the fit_reg_log function but 2 things are changing :
 
-	fit_reg_log(formula = class ~ ., data = breast, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
 	
 You have to change the mode and add the batch_size.
 You have obviously an access to the **print()** and **summary()** functions too and to the elements using the $ after the fitted object.
@@ -102,10 +117,18 @@ You have obviously an access to the **print()** and **summary()** functions too 
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "online", batch_size = 10, learning_rate = 0.01, max_iter = 100)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "online", learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
 
 You just have to change the mode and set it "online" to train your dataset.
 
+### Batch parallel mode
+
+As the batch mode, you have to use the fit_reg_log function :
+
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, espilon = 0.0001)
+
+You just have to change the mode and set it "batch_parallel" to train your dataset.
+We advise you to use it if you are planning to fit a big dataset.
 
 Predict function
 ------------------------
