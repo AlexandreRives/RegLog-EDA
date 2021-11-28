@@ -5,13 +5,14 @@ with three modes :
 - Batch mode
 - Mini-batch mode
 - Online mode
+- Batch parallel mode
 
 Using this package will allow you to fit, to predict, to see your result and to see an interactive plot of the loss function.
 
 Installing the package
 -----------------------
 
-	devtools::install_github("AlexandreRives/RegLog-EDA", dependancies = TRUE)
+	devtools::install_github("AlexandreRives/RegLog-EDA", dependencies = TRUE)
 	
 How to use the package ?
 ------------------------
@@ -44,7 +45,8 @@ Below, an example on how you have to use it :
 	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
 
 One option can be used if you want to scale your dataset :
-normalize : FALSE by default.
+normalize : FALSE by default, TRUE if you want to scale your data.
+graph : FALSE by default, if you want to plot the graph during the gradient descent, turn it on TRUE.
 
 Using the $ after the fit object can give you an access to 3 lists :
  - the coefficients
@@ -80,7 +82,6 @@ Here the summary function :
 	Execution time : 0.241096 sec.
 
 	############################################################################################################### 
-
 
 Then the print function :
 
@@ -122,6 +123,7 @@ As the batch mode, you have to use the fit_reg_log function :
 	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "online", learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
 
 You just have to change the mode and set it "online" to train your dataset.
+the **print()** and **summary()** functions can give you details about your fitted object.
 
 ### Batch parallel mode
 
@@ -129,21 +131,27 @@ As the batch mode, you have to use the fit_reg_log function :
 
 	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, espilon = 0.0001)
 
-You just have to change the mode and set it "batch_parallel" to train your dataset.
+Instead of using the "batch" mode, change the it to "batch_parallel" to train your dataset.
 We advise you to use it if you are planning to fit a big dataset.
+Set the number of cores you want to use. If you don't know how many cores your computer has, just put -1 and it will get all the cores minus 1 to let you use your computer while your data are in the fit function.
 
 Predict function
 ------------------------
 
-The predict function allows you to use the probability or the class predicted.
+Once you have fitted your data, you can go for the predict function.
+
+The predict function allows you to get the probability or the class predicted.
 
 ### Posterior type
 
-	predict <- predict_reg_log(object = fit, newdata = test, type = "posterior")
+	predict <- predict_reg_log(object = fit, newdata = breast_test, type = "posterior")
 
 ### Class predicted type
 
-	predict <- predict_reg_log(object = fit, newdata = test, type = "class")
+	predict <- predict_reg_log(object = fit, newdata = breast_test, type = "class")
+
+By using a **print()** on your predict object, you will see a tab with all your predict probability or the class predicted.
+You will be able to make a confusion matrix or to compute the MSE.
 
 Diverse functions
 ------------------------
