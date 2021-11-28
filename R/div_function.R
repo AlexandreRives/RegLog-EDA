@@ -11,6 +11,11 @@
 #' @export
 #'
 #' @return a filtered dataframe
+#' @examples
+#'
+#' f_Formula (recode~.,data=breast)
+#' f_Formula (recode~clump+mitoses,data=breast)
+#'
 #'
 f_Formula <- function(formula,data) {
   df<- model.frame(formula,data=data)
