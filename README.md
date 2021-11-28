@@ -20,6 +20,7 @@ How to use the package ?
 First of all, you have to load the package using the **library()** command in your console :
 
 	library(LogRegEDA)
+	
 ### Importing the dataset
 
 Then, you need to import a dataset. Don't worry, we had your back and you can use the one we put in the package if you first want how the package works :
@@ -83,6 +84,8 @@ Here the summary function :
 
 Then the print function :
 
+	print(fit)
+
 	############################################################################################################### 
 
 	Results of the logistic regression : 
@@ -90,7 +93,6 @@ Then the print function :
 	fit_reg_log(formula = class ~ ., data = train_breast, mode = "batch", 
 	    normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, 
 	    graph = FALSE, epsilon = 1e-05)
-
 
 	Coefficients & Features : 
 	  (Intercept)    clump  ucellsize ucellshape mgadhesion     sepics   bnuclei bchromatin   normnucl    mitoses
@@ -138,11 +140,10 @@ The predict function allows you to use the probability or the class predicted.
 ### Posterior type
 
 	predict <- predict_reg_log(object = fit, newdata = test, type = "posterior")
-	
+
 ### Class predicted type
 
 	predict <- predict_reg_log(object = fit, newdata = test, type = "class")
-
 
 Diverse functions
 ------------------------
