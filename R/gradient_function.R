@@ -7,8 +7,12 @@
 #' @param var_y names of the Y columns
 #' @param learning_rate the learning rate
 #' @param max_iter number of iterations
+#' @param graph TRUE if you want to plot the cost list while the gradient descent is running.
+#' @param epsilon Tolerance's threshold of the cost list convergence.
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @import graphics
 #'
 #' @export
 #'
@@ -33,7 +37,7 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter, gr
   if (graph == TRUE){
     Sys.sleep(0.1)
     plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
-         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Batch")
+         xlab = "Iteration", ylab = "Cost", main = "Gradient descent : Batch")
   }
 
   for (i in 1:max_iter){
@@ -83,8 +87,12 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter, gr
 #' @param var_y names of the Y columns
 #' @param learning_rate the learning rate
 #' @param max_iter number of iterations
+#' @param graph TRUE if you want to plot the cost list while the gradient descent is running.
+#' @param epsilon Tolerance's threshold of the cost list convergence.
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @import graphics
 #'
 #' @export
 #'
@@ -105,7 +113,7 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
   if (graph == TRUE){
     Sys.sleep(0.1)
     plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,2),
-         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Online")
+         xlab = "Iteration", ylab = "Cost", main = "Gradient descent : Online")
   }
 
   for (it in 1:max_iter){
@@ -165,8 +173,12 @@ online_stochastic_gradient_descent <- function(df, var_X, var_y, learning_rate, 
 #' @param learning_rate the learning rate
 #' @param max_iter number of iterations
 #' @param nb_batch batch size
+#' @param graph TRUE if you want to plot the cost list while the gradient descent is running.
+#' @param epsilon Tolerance's threshold of the cost list convergence.
 #'
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
+#' 
+#' @import graphics
 #'
 #' @export
 #'
@@ -189,7 +201,7 @@ gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_i
   if (graph == TRUE){
     Sys.sleep(0.1)
     plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
-         xlab = "Itération", ylab = "Cost", main = "Gradient descent : Mini-Batch")
+         xlab = "Iteration", ylab = "Cost", main = "Gradient descent : Mini-Batch")
   }
 
   for (it in 1:max_iter){

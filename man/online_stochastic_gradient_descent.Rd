@@ -4,7 +4,15 @@
 \alias{online_stochastic_gradient_descent}
 \title{Online stochastic gradient descent}
 \usage{
-online_stochastic_gradient_descent(df, var_X, var_y, learning_rate, max_iter)
+online_stochastic_gradient_descent(
+  df,
+  var_X,
+  var_y,
+  learning_rate,
+  max_iter,
+  graph,
+  epsilon
+)
 }
 \arguments{
 \item{df}{dataset}
@@ -16,6 +24,10 @@ online_stochastic_gradient_descent(df, var_X, var_y, learning_rate, max_iter)
 \item{learning_rate}{the learning rate}
 
 \item{max_iter}{number of iterations}
+
+\item{graph}{TRUE if you want to plot the cost list while the gradient descent is running.}
+
+\item{epsilon}{Tolerance's threshold of the cost list convergence.}
 }
 \value{
 list of theta and the cost list

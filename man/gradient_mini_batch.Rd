@@ -4,7 +4,16 @@
 \alias{gradient_mini_batch}
 \title{Mini_batch gradient descent}
 \usage{
-gradient_mini_batch(df, var_X, var_y, nb_batch, learning_rate, max_iter)
+gradient_mini_batch(
+  df,
+  var_X,
+  var_y,
+  nb_batch,
+  learning_rate,
+  max_iter,
+  graph,
+  epsilon
+)
 }
 \arguments{
 \item{df}{dataset}
@@ -18,6 +27,10 @@ gradient_mini_batch(df, var_X, var_y, nb_batch, learning_rate, max_iter)
 \item{learning_rate}{the learning rate}
 
 \item{max_iter}{number of iterations}
+
+\item{graph}{TRUE if you want to plot the cost list while the gradient descent is running.}
+
+\item{epsilon}{Tolerance's threshold of the cost list convergence.}
 }
 \value{
 list of theta and the cost list

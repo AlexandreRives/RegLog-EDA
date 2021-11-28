@@ -12,7 +12,9 @@ fit_reg_log(
   normalize = FALSE,
   learning_rate = 0.1,
   max_iter = 100,
-  ncores = 1
+  cores = 1,
+  graph = FALSE,
+  epsilon = 1e-05
 )
 }
 \arguments{
@@ -30,7 +32,11 @@ fit_reg_log(
 
 \item{max_iter}{number of iterations.}
 
-\item{ncores}{the number of cores to run the fit function faster.}
+\item{cores}{the number of cores to run the fit function faster.}
+
+\item{graph}{TRUE if you want to plot the cost list while the gradient descent is running.}
+
+\item{epsilon}{Tolerance's threshold of the cost list convergence.}
 }
 \value{
 object used to the predicted part
@@ -41,10 +47,10 @@ A fitted dataset
 \preformatted{                LogRegEDA
            Logistic Regression
 }
-
--------------------------------------------------------#
 }
 \details{
+-------------------------------------------------------#
+
 Fit function
 
 Function that return a trained dataset using the gradient descent.

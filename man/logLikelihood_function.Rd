@@ -4,7 +4,7 @@
 \alias{logLikelihood_function}
 \title{logLikelihood}
 \usage{
-logLikelihood_function(coef, df)
+logLikelihood_function(coef, x)
 }
 \arguments{
 \item{coef}{coefficients of the model}

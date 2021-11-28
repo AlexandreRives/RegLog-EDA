@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_pred_function.R
 \name{summary.reg_log}
 \alias{summary.reg_log}
-\title{Fit function}
+\title{Summary function}
 \usage{
 \method{summary}{reg_log}(object, ...)
 }
