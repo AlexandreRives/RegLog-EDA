@@ -80,70 +80,70 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
 
   #gradient descent
   if (mode == "batch"){
-    
+
     start <- Sys.time() # Start time
     coefs <- batch_gradient_descent(df, colnames(X), colnames(y), learning_rate, max_iter, graph, epsilon)
     end <- Sys.time() # End time
-    
+
     # Execution time
     time <- as.numeric(end - start)
-    
+
   } else if (mode == "online"){
-    
+
     start <- Sys.time() # Start time
     coefs <- online_stochastic_gradient_descent(df,colnames(X),colnames(y),learning_rate,max_iter, graph, epsilon)
     end <- Sys.time() # End time
-    
+
     # Execution time
     time <- as.numeric(end - start)
-    
+
   } else if (mode == "mini_batch"){
-    
+
     start <- Sys.time() # Start time
     coefs <- gradient_mini_batch(df,colnames(X),colnames(y),batch_size,learning_rate, max_iter, graph, epsilon)
     end <- Sys.time() # End time
-    
+
     # Execution time
     time <- as.numeric(end - start)
-    
+
   } else if (mode == "batch_parallel"){
-    
+
     start <- Sys.time() #Start time
-    
+
     # Getting the number of cores
-    cores <- ncores(cores) 
-    
+    cores <- ncores(cores)
+
     # Splitting the dataset in blocs
     blocs <- df %>% mutate(batch = row_number() %% cores) %>% nest(-batch) %>% pull(data)
-    
+
     # Making the clusters
     cl <- makeCluster(cores)
     registerDoParallel(cl)
-    
+
     # Foreach loop on the blocs
     res <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
       coefs <- batch_gradient_descent(i, colnames(X), colnames(y), learning_rate, max_iter, graph, epsilon)
       return(coefs)
     }
-    
+
     # Stopping the clusters
     stopCluster(cl)
-    
+
     end <- Sys.time() #End time
-    
+
     # Execution time
     time <- as.numeric(end - start)
-    
+
     # Mean coefficients for parallel computing
     coefs <- res
     tab_mean_coefs <- as.data.frame(coefs[1])
     s <- seq(from=4, to=cores*3, by=3)
-    
+
     for(i in s){
       tab_mean_coefs <- cbind(tab_mean_coefs, as.data.frame(coefs[i]))
     }
     coefs_mean <- apply(X = tab_mean_coefs, MARGIN = 1, FUN = mean)
-    
+
     # Parallel class
     object_parallel <- list()
     object_parallel$coefficients <- coefs_mean
@@ -152,10 +152,10 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     object_parallel$time <- time
     object_parallel$call <- call
     class(object_parallel) <- "reg_log_parallel"
-    
+
     return(object_parallel)
   }
-  
+
   #Null Deviance
   #null_deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
 
@@ -211,14 +211,14 @@ predict_reg_log <- function(object, newdata, type){
 
   # Part 2 : Set the coefs on the new data
   prob = X_newdata %*% object$coefficients
+  prob = sigmoid(prob)
 
   # Part 3 : Print coefs or appliance class
   if(type == "posterior"){
-    prob = sigmoid(prob)
-    print(prob)
+    return(prob)
   }else if(type == "class"){
     class_pred = ifelse(prob > 0.5, 1, 0)
-    print(class_pred)
+    return(class_pred)
   }
 }
 
@@ -315,10 +315,10 @@ summary.reg_log <- function(object, ...){
 #' @export
 #'
 print.reg_log_parallel <- function(x, ...){
-  
+
   df_print <- as.data.frame(rbind(c(x$coefficients)))
   colnames(df_print) <- c("(Intercept)", x$features)
-  
+
   cat("############################################################################################################### \n")
   cat("\n")
   cat("Results of the logistic regression : \n")
@@ -332,7 +332,7 @@ print.reg_log_parallel <- function(x, ...){
   cat("\n")
   cat("\n")
   cat("############################################################################################################### \n")
-  
+
 }
 
 
