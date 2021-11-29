@@ -215,7 +215,11 @@ predict_reg_log <- function(object, newdata, type){
   class_pred = ifelse(proba > 0.5, 1, 0)
 
   # Part 3 : Print coefs or appliance class
-  return(list(proba = proba, class = class_pred))
+  if(type == "posterior"){
+    return(proba)
+  }else if(type == "class"){
+    return(class_pred)
+  }
 }
 
 #' Print function
