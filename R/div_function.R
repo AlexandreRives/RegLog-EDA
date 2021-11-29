@@ -14,7 +14,7 @@
 #
 #'
 f_Formula <- function(formula,data) {
-  df<- model.frame(formula,data=data)
+  df<- stats::model.frame(formula,data=data)
   return(df)
 }
 
