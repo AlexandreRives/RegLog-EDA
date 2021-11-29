@@ -42,7 +42,7 @@ As we said, we have coded 3 different modes. Let's start with the batch :
 
 Below, an example on how you have to use it :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, espsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
 
 One option can be used if you want to scale your dataset :
 normalize : FALSE by default, TRUE if you want to scale your data.
