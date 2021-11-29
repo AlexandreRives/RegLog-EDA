@@ -121,7 +121,7 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     registerDoParallel(cl)
 
     # Foreach loop on the blocs
-    res <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function"), envir = globalenv()) %dopar% {
+    res <- foreach(i = blocs, .combine = "cbind", .export = c("batch_gradient_descent", "sampled_df", "add_constant", "sigmoid", "log_loss_function")) %dopar% {
       coefs <- batch_gradient_descent(i, colnames(X), colnames(y), learning_rate, max_iter, graph, epsilon)
       return(coefs)
     }
