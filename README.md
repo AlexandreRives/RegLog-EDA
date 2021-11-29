@@ -11,9 +11,7 @@ Using this package will allow you to fit, to predict, to see your result and to 
 
 Installing the package
 -----------------------
-
 	devtools::install_github("AlexandreRives/RegLog-EDA", dependencies = TRUE)
-	
 How to use the package ?
 ------------------------
 ### Loading the package
@@ -47,7 +45,7 @@ As we said, we have coded 3 different modes. Let's start with the batch :
 
 Below, an example on how you have to use it :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch", normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, graph = FALSE, epsilon = 1e-05)
 
 One option can be used if you want to scale your dataset :
 normalize : FALSE by default, TRUE if you want to scale your data.
@@ -68,7 +66,7 @@ Here the summary function :
 
 	Results of the logistic regression : 
 	Call : 
-	fit_reg_log(formula = class ~ ., data = train_breast, mode = "batch", 
+	fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch", 
 	    normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, 
 	    graph = FALSE, epsilon = 1e-05)
 
@@ -80,13 +78,13 @@ Here the summary function :
 	  (Intercept)    clump  ucellsize ucellshape mgadhesion     sepics   bnuclei bchromatin   normnucl    mitoses
 	1    1.034724 -1.08406 -0.6294483 -0.7943087 -0.4462591 -0.3586972 -1.263574 -0.6778172 -0.4272717 -0.1065407
 
-	Null Deviance :  on 499 degrees of freedom
-	Residual deviance :  on 490 degrees of freedom
-	AIC :
+	Degrees of Freedom : 499 Total (- intercept); 490 Residual
+	Deviance :  4570.997
+	AIC : 4590.997
 
-	Execution time : 0.241096 sec.
+	Execution time : 0.7300706 sec.
 
-	############################################################################################################### 
+	###############################################################################################################
 
 Then the print function :
 
@@ -96,7 +94,7 @@ Then the print function :
 
 	Results of the logistic regression : 
 	Call : 
-	fit_reg_log(formula = class ~ ., data = train_breast, mode = "batch", 
+	fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch", 
 	    normalize = TRUE, learning_rate = 0.1, max_iter = 1000, cores = 1, 
 	    graph = FALSE, epsilon = 1e-05)
 
@@ -105,10 +103,10 @@ Then the print function :
 	1    1.034724 -1.08406 -0.6294483 -0.7943087 -0.4462591 -0.3586972 -1.263574 -0.6778172 -0.4272717 -0.1065407
 
 	Degrees of Freedom : 499 Total (- intercept); 490 Residual
-	Null Deviance :
-	AIC :
+	Deviance :  4570.997
+	AIC :  4590.997
 
-	Execution time : 0.241096 sec.
+	Execution time : 0.7300706 sec.
 
 	############################################################################################################### 
 	
@@ -148,13 +146,11 @@ Once you have fitted your data, you can go for the predict function.
 The predict function allows you to get the probability or the class predicted.
 
 ### Posterior type
-
 	predict <- predict_reg_log(object = fit, newdata = breast_test, type = "posterior")
-
-### Class predicted type
-
+	
+### Class type
 	predict <- predict_reg_log(object = fit, newdata = breast_test, type = "class")
-
+	
 By using a **print()** on your predict object, you will see a tab with all your predict probability or the class predicted.
 You will be able to make a confusion matrix or to compute the MSE.
 
