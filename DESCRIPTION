@@ -19,5 +19,6 @@ Imports: doParallel,
   tidyverse,
   dplyr,
   tidyr,
+  tidytable
 Depends: 
     R (>= 2.10),

@@ -265,3 +265,41 @@ AIC_function<-function(LL,df){
   return(AIC)
 }
 
+#' Re-coding variables
+#'
+#' Process of returning a data set with re-coding features
+#' 
+#' @param x A data frame or matrix
+#' @author Alexandre Rives
+#' 
+#' @import PCAmixdata
+#' @import tidytable
+#' 
+#' @export
+#' 
+#' @return A encoding quantitative data of the dataset.
+#' 
+dummies <- function(x){
+  x_split <- splitmix(x)
+  x_dummies <- get_dummies.(x_split$X.quali, drop_first = TRUE)
+  x_dummies <- splitmix(x_dummies)
+  return(x_dummies$X.quanti)
+}
+
+#' Re-coding target variable
+#'
+#' Process of returning a data set with re-coding the target variable
+#' 
+#' @param y data of the target variable
+#' @author Alexandre Rives
+#' 
+#' @import tidytable
+#' 
+#' @export
+#' 
+#' @return A re-coding quantitative data of the target variable.
+#' 
+dummies_y <- function(y){
+  y <- get_dummies.(y, drop_first = TRUE)
+  return(y)
+}

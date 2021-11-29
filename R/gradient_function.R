@@ -35,8 +35,17 @@ batch_gradient_descent <- function(df, var_X, var_y, learning_rate, max_iter, gr
   y_df = df[, var_y]
 
   if (graph == TRUE){
+    
+    X = add_constant(X_df)
+    Z = X %*% theta
+    h = sigmoid(Z)
+    gradient = (t(X) %*% (y_df - h)) / length(y_df)
+    
+    # Calculating the cost and adding it to the list
+    cost_1 = log_loss_function(y_pred = h, y = y_df)
+    
     Sys.sleep(0.1)
-    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
+    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,cost_1),
          xlab = "Iteration", ylab = "Cost", main = "Gradient descent : Batch")
   }
 
@@ -199,8 +208,27 @@ gradient_mini_batch <- function(df, var_X, var_y, nb_batch, learning_rate, max_i
   residuals <- c()
 
   if (graph == TRUE){
+    
+    df <- df_mini_batch(df = df, df_initial = df_init, nb_batch = nb_batch)
+    # Collecting data
+    df_mini = df[1:nb_batch,]
+    # Dropping this data in df
+    df <- df[-c(1:nb_batch),]
+    
+    # X != y
+    X_df <- df_mini[, var_X]
+    y_df <- df_mini[, var_y]
+    
+    X <- add_constant(X_df)
+    Z <- X %*% theta
+    h <- sigmoid(Z)
+    gradient <- t(X) %*% (y_df - h) / length(y_df)
+    
+    # Calculating the cost and adding it to the list
+    cost_1 = log_loss_function(y_pred = h, y = y_df)    
+    
     Sys.sleep(0.1)
-    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,10),
+    plot(x = NULL, y = NULL, xlim = c(1,max_iter), ylim = c(0,cost_1),
          xlab = "Iteration", ylab = "Cost", main = "Gradient descent : Mini-Batch")
   }
 
