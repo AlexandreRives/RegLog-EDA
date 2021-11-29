@@ -47,7 +47,7 @@ normalize <- function(x){
 #'
 #'
 #' @import parallel
-#' 
+#'
 #' @export
 #'
 #' @return The number of cores.
@@ -120,7 +120,7 @@ sampled_df <- function(df){
 #'
 #' @param x dataset
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
-#' 
+#'
 #' @export
 #'
 #' @return sigmoid
@@ -233,7 +233,7 @@ logLikelihood_function<-function (coef,x){
   logLikelihood<-0
   for (i in 1:nrow(x)){
 
-    somme[[i]]<-sum(x[i,2:ncol(x)]*coef[2:ncol(x)],coef[1])
+    somme[[i]]<-sum(x[i,2:ncol(x)]*coef[2:length(coef)],coef[1])
     pi[[i]] <-exp(somme[[i]])/(1+exp(somme[[i]]))
 
     LL[[i]]= x[i,1]*log(pi[[i]])+(1-x[i,1])*log(1-pi[[i]])
@@ -268,17 +268,17 @@ AIC_function<-function(LL,df){
 #' Re-coding variables
 #'
 #' Process of returning a data set with re-coding features
-#' 
+#'
 #' @param x A data frame or matrix
 #' @author Alexandre Rives
-#' 
+#'
 #' @import PCAmixdata
 #' @import tidytable
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return A encoding quantitative data of the dataset.
-#' 
+#'
 dummies <- function(x){
   x_split <- splitmix(x)
   x_dummies <- get_dummies.(x_split$X.quali, drop_first = TRUE)
@@ -289,16 +289,16 @@ dummies <- function(x){
 #' Re-coding target variable
 #'
 #' Process of returning a data set with re-coding the target variable
-#' 
+#'
 #' @param y data of the target variable
 #' @author Alexandre Rives
-#' 
+#'
 #' @import tidytable
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return A re-coding quantitative data of the target variable.
-#' 
+#'
 dummies_y <- function(y){
   y <- get_dummies.(y, drop_first = TRUE)
   return(y)

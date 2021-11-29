@@ -30,7 +30,7 @@
 #' @import tidyverse
 #' @import dplyr
 #' @import tidyr
-#' 
+#'
 #' @export
 #'
 #' @return A fitted dataset
@@ -156,11 +156,11 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     return(object_parallel)
   }
 
-  #Null Deviance
-  #null_deviance <- 2*(logLikelihood_function(coefs$best_theta[-1],df[-1]) - logLikelihood_function(coefs$best_theta[1],df[1]))
+  #Deviance
+  Deviance <- -2*logLikelihood_function(coefs$best_theta,df)
 
   #AIC
-  #AIC<- AIC_function(logLikelihood_function(coefs$best_theta,df),df)
+  AIC<- AIC_function(logLikelihood_function(coefs$best_theta,df),df)
 
   # Degrees of freedom
   ddl_null_deviance <-   nrow(data) - 1
@@ -178,8 +178,8 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
   object$norm <- normalize
   object$call <- call
   object$summary_residuals <- sum_res
-  #object$null_deviance <- null_deviance
-  #object$AIC <- AIC
+  object$Deviance <- Deviance
+  object$AIC <- AIC
   object$ddl_null_deviance <- ddl_null_deviance
   object$ddl_residual_deviance <- ddl_residual_deviance
   object$time <- time
@@ -250,7 +250,7 @@ print.reg_log <- function(x, ...){
   print(df_print)
   cat("\n")
   cat("Degrees of Freedom :", x$ddl_null_deviance, "Total (- intercept);",  x$ddl_residual_deviance ,"Residual\n")
-  cat("Null Deviance : ", x$null_deviance , "Help 1 !\n")
+  cat("Deviance : ", x$Deviance , "Help 1 !\n")
   cat("AIC : ", x$AIC, "Help 2 !\n")
   cat("\n")
   cat("Execution time :", x$time, "sec.")
