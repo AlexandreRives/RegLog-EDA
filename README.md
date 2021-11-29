@@ -111,7 +111,7 @@ Then the print function :
 
 As the batch mode, you have to use the fit_reg_log function but 2 things are changing :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
 	
 You have to change the mode and add the batch_size.
 You have obviously an access to the **print()** and **summary()** functions too and to the elements using the $ after the fitted object.
@@ -129,7 +129,7 @@ the **print()** and **summary()** functions can give you details about your fitt
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, espilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, epsilon = 0.0001)
 
 Instead of using the "batch" mode, change the it to "batch_parallel" to train your dataset.
 We advise you to use it if you are planning to fit a big dataset.
