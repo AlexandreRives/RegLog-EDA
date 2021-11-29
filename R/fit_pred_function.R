@@ -212,12 +212,12 @@ predict_reg_log <- function(object, newdata, type){
   # Part 2 : Set the coefs on the new data
   prob = X_newdata %*% object$coefficients
   prob = sigmoid(prob)
+  class_pred = ifelse(prob > 0.5, 1, 0)
 
   # Part 3 : Print coefs or appliance class
   if(type == "posterior"){
     return(prob)
   }else if(type == "class"){
-    class_pred = ifelse(prob > 0.5, 1, 0)
     return(class_pred)
   }
 }
