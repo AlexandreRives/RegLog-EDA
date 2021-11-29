@@ -132,7 +132,7 @@ the **print()** and **summary()** functions can give you details about your fitt
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, epsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 4, graph = FALSE, epsilon = 0.0001)
 
 Instead of using the "batch" mode, change the it to "batch_parallel" to train your dataset.
 We advise you to use it if you are planning to fit a big dataset.
