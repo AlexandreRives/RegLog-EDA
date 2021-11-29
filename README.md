@@ -30,6 +30,11 @@ Then, you need to import a dataset. Don't worry, we had your back and you can us
 
 Great ! Now you can see on the right that the dataset is loaded. Make a little check with the **head()** function in your console to confirm that the dataset is well loaded.
 
+Let's split the dataset in a train and a test set :
+
+	breast_train = breast[1:500,]
+	breast_test = breast[501:699,]
+
 Now you can be focused on our package.
 
 Fit function
@@ -42,7 +47,7 @@ As we said, we have coded 3 different modes. Let's start with the batch :
 
 Below, an example on how you have to use it :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch", learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
 
 One option can be used if you want to scale your dataset :
 normalize : FALSE by default, TRUE if you want to scale your data.
@@ -111,7 +116,7 @@ Then the print function :
 
 As the batch mode, you have to use the fit_reg_log function but 2 things are changing :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "mini_batch", batch_size = 10, learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
 	
 You have to change the mode and add the batch_size.
 You have obviously an access to the **print()** and **summary()** functions too and to the elements using the $ after the fitted object.
@@ -120,7 +125,7 @@ You have obviously an access to the **print()** and **summary()** functions too 
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "online", learning_rate = 0.01, max_iter = 100, graph = FALSE, espilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "online", learning_rate = 0.01, max_iter = 100, graph = FALSE, epsilon = 0.0001)
 
 You just have to change the mode and set it "online" to train your dataset.
 the **print()** and **summary()** functions can give you details about your fitted object.
@@ -129,7 +134,7 @@ the **print()** and **summary()** functions can give you details about your fitt
 
 As the batch mode, you have to use the fit_reg_log function :
 
-	fit <- fit_reg_log(formula = class ~ ., data = breast, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, epsilon = 0.0001)
+	fit <- fit_reg_log(formula = class ~ ., data = breast_train, mode = "batch_parallel", learning_rate = 0.01, max_iter = 100, cores = 1, graph = FALSE, epsilon = 0.0001)
 
 Instead of using the "batch" mode, change the it to "batch_parallel" to train your dataset.
 We advise you to use it if you are planning to fit a big dataset.
