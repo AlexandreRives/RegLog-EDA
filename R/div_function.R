@@ -45,9 +45,10 @@ normalize <- function(x){
 #' @param n_cores A number of cores
 #' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
 #'
-#' @export
 #'
 #' @import parallel
+#' 
+#' @export
 #'
 #' @return The number of cores.
 #'
@@ -60,27 +61,6 @@ ncores <- function(n_cores){
   }else{
     return(n_cores)
   }
-}
-
-#' Re-coding variables
-#'
-#' Process of returning a data set with re-coding features
-#'
-#' @param x A data frame or matrix
-#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#'
-#' @import PCAmixdata
-#' @import tidytable
-#'
-#' @export
-#'
-#' @return A encoding quantitative data of the dataset.
-#'
-dummies <- function(x){
-  x_split <- splitmix(x)
-  x_dummies <- get_dummies.(x_split$X.quali, drop_first = TRUE)
-  x_dummies <- splitmix(x_dummies)
-  return(x_dummies$X.quanti)
 }
 
 #' Filter feature variables
@@ -117,24 +97,6 @@ filtered_y <- function(df, y){
   return(df_y)
 }
 
-#' Re-coding target variable
-#'
-#' Process of returning a data set with re-coding the target variable
-#'
-#' @param y data of the target variable
-#' @author Frintz Elisa, NDiaye Deffa, Rives Alexandre
-#'
-#' @import tidytable
-#'
-#' @export
-#'
-#' @return A re-coding quantitative data of the target variable.
-#'
-dummies_y <- function(y){
-  y <- get_dummies.(y, drop_first = TRUE)
-  return(y)
-}
-
 #' Sample a dataset
 #'
 #' Process of returning a sampled dataset
@@ -158,6 +120,8 @@ sampled_df <- function(df){
 #'
 #' @param x dataset
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
+#' 
+#' @export
 #'
 #' @return sigmoid
 #'
