@@ -30,7 +30,7 @@
 #' @import tidyverse
 #' @import dplyr
 #' @import tidyr
-#'
+#' 
 #' @export
 #'
 #' @return A fitted dataset
@@ -114,6 +114,7 @@ fit_reg_log <- function(formula, data, mode, batch_size, normalize = FALSE, lear
     cores <- ncores(cores)
 
     # Splitting the dataset in blocs
+    batch <- 0
     blocs <- df %>% mutate(batch = row_number() %% cores) %>% nest(-batch) %>% pull(data)
 
     # Making the clusters
