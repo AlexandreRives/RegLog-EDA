@@ -254,7 +254,7 @@ residuals_summary_function <- function(residuals){
 #' The function that return the logLikelihood
 #'
 #' @param coef coefficients of the model
-#' @param df a dataframe
+#' @param x a dataframe
 #' @author Alexandre Rives, NDiaye Deffa, Frintz Elisa
 #'
 #' @export

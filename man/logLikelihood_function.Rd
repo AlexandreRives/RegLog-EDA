@@ -9,7 +9,7 @@ logLikelihood_function(coef, x)
 \arguments{
 \item{coef}{coefficients of the model}
 
-\item{df}{a dataframe}
+\item{x}{a dataframe}
 }
 \value{
 the Log-Likelihood

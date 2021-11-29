@@ -28,6 +28,8 @@
 #' @import foreach
 #' @import parallel
 #' @import tidyverse
+#' @import dplyr
+#' @import tidyr
 #'
 #' @export
 #'
